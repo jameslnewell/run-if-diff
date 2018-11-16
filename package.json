@@ -1,0 +1,59 @@
+{
+  "name": "run-if-diff",
+  "version": "1.0.0",
+  "description": "Runs a command if files are different.",
+  "keywords": [
+    "git",
+    "diff",
+    "exec",
+    "run",
+    "changed",
+    "modified",
+    "file"
+  ],
+  "repository": "jameslnewell/run-if-diff",
+  "main": "lib/api/index.js",
+  "bin": {
+    "run-if-diff": "lib/cli/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "@types/micromatch": "^3.1.0",
+    "@types/minimatch": "^3.0.3",
+    "@types/yargs": "^12.0.1",
+    "micromatch": "^3.1.10",
+    "minimatch": "^3.0.4",
+    "yargs": "^12.0.2"
+  },
+  "devDependencies": {
+    "@tradie/node-scripts": "^1.2.1",
+    "@types/jest": "^23.3.2",
+    "husky": "^1.1.0",
+    "lint-staged": "^7.3.0",
+    "prettier": "^1.14.3"
+  },
+  "scripts": {
+    "build": "node-scripts build",
+    "watch": "node-scripts build --watch",
+    "test": "node-scripts test",
+    "example": "node-scripts example",
+    "prepublishOnly": "npm run build && npm run test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,md,json}": [
+      "prettier --write --single-quote --no-bracket-spacing",
+      "git add"
+    ]
+  },
+  "license": "MIT"
+}
