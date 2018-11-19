@@ -16,7 +16,7 @@ async function createSampleFiles() {
 }
 
 async function git(args: string[]) {
-  const {code, stdout, stderr} = await exec('git', args);
+  const {code, stdout, stderr} = await exec('git', args, {cwd: tmpdir});
   if (code !== 0) {
     throw new Error(
       `Unable to 'git ${args.join(
