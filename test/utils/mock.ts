@@ -15,14 +15,17 @@ async function createSampleFiles() {
   await fs.writeFile(`${tmpdir}/package.json`, '{"name": "foobar"}');
 }
 
-async function gitInit() {
-  const {code, stdout, stderr} = await exec('git', ['init']);
+async function git(args: string[]) {
+  const {code, stdout, stderr} = await exec('git', args);
   if (code !== 0) {
     throw new Error(
-      `Unable to 'git init': code=${code} stdout=${stdout} stderr=${stderr}`
+      `Unable to 'git ${args.join(
+        ' '
+      )}: code=${code} stdout=${stdout} stderr=${stderr}`
     );
   }
 }
+async function gitInit() {}
 
 async function gitAdd() {
   const {code, stdout, stderr} = await exec('git', ['add', '-A']);
