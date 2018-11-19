@@ -2,7 +2,8 @@ import {spawn} from 'child_process';
 
 export function exec(
   cmd: string,
-  args: string[]
+  args: string[],
+  options: {cwd: string} = {}
 ): Promise<{code: number; stdout: string; stderr: string}> {
   let stdout = '';
   let stderr = '';
