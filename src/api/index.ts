@@ -6,7 +6,7 @@ import {passthru} from './utils/shell';
 
 export interface Options {
   since?: string;
-  patterns?: string[];
+  files?: string[];
 }
 
 const log = debug('run-if-diff');
@@ -23,19 +23,19 @@ export default async function(
   args: string[],
   options: Options
 ): Promise<void> {
-  const {since, patterns = []} = options;
+  const {since, files = []} = options;
 
   const ref = since ? since : await getDefaultRef();
   log(`ref: %s`, ref);
   log(`cmd: ${cmd} ${args.join(' ')}`);
 
-  const changed = await diff(ref);
-  log(`${changed.length} files changed: ${formatFiles(changed)}\n`);
+  const changedFiles = await diff(ref);
+  log(`${changedFiles.length} files changed: ${formatFiles(changedFiles)}\n`);
 
-  const matched = mm(changed, patterns);
-  log(`${matched.length} files matched: ${formatFiles(matched)}\n`);
+  const matchedFiles = mm(changedFiles, files);
+  log(`${matchedFiles.length} files matched: ${formatFiles(matchedFiles)}\n`);
 
-  if (matched.length) {
+  if (matchedFiles.length) {
     log(`the command was executed`);
     await passthru(cmd, args);
   } else {

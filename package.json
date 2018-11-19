@@ -1,6 +1,6 @@
 {
   "name": "run-if-diff",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Runs a command if files are different.",
   "keywords": [
     "git",

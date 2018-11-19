@@ -28,7 +28,7 @@ import {PassThroughError} from '../api/utils/shell';
   try {
     await runIfDiff(cmd, args, {
       since: argv.since,
-      patterns: [].concat(argv.file)
+      files: [].concat(argv.file)
     });
   } catch (error) {
     if (error instanceof PassThroughError) {

@@ -23,13 +23,15 @@ Example:
 run-if-diff --since v1.3.1 --file my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
 ```
 
-## Options
+## CLI
 
-### `--since`
+### Options
+
+#### `--since`
 
 The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
 
-### `--file`
+#### `--file`
 
 A file or a glob that must be different for the command to be run.
 
