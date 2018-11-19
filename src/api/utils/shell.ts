@@ -1,18 +1,22 @@
+// tslint:disable max-classes-per-file
 import {spawn} from 'child_process';
 
-class ExecError extends Error {
+export class ExecError extends Error {
   constructor(
-    public readonly code: number,
-    public readonly stdout: string,
-    public readonly stderr: string
+    readonly cmd: string,
+    readonly code: number,
+    readonly stdout: string,
+    readonly stderr: string
   ) {
-    super('');
+    super(
+      `exec() failed:\n   cmd=${cmd}\n  code=${code}\n  ${stdout}\n  ${stderr}`
+    );
   }
 }
 
-class SpawnError extends Error {
-  constructor(public readonly code: number) {
-    super('');
+export class PassThroughError extends Error {
+  constructor(readonly cmd: string, readonly code: number) {
+    super(`passthru() failed:\n   cmd=${cmd}\n  code=${code}`);
   }
 }
 
@@ -38,7 +42,7 @@ export function exec(
       if (code === 0) {
         resolve({code, stdout, stderr});
       } else {
-        reject(new ExecError(code, stdout, stderr));
+        reject(new ExecError([cmd, ...args].join(' '), code, stdout, stderr));
       }
     });
   });
@@ -55,11 +59,10 @@ export function passthru(
       reject(error);
     });
     child.on('close', code => {
-      console.log('CLOSE');
       if (code === 0) {
         resolve({code});
       } else {
-        reject(new SpawnError(code));
+        reject(new PassThroughError([cmd, ...args].join(' '), code));
       }
     });
   });

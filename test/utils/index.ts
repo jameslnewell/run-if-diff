@@ -5,22 +5,23 @@ import * as shell from '../../src/api/utils/shell';
 let tmpdir: string | undefined = undefined;
 
 export async function cli(args: string[]) {
-  return await shell.exec(
-    'ts-node',
-    [`${__dirname}/../../src/cli/index.ts`, ...args],
-    {cwd: tmpdir}
-  );
+  try {
+    return await shell.exec(
+      'ts-node',
+      [`${__dirname}/../../src/cli/index.ts`, '--', ...args],
+      {cwd: tmpdir}
+    );
+  } catch (error) {
+    if (error instanceof shell.ExecError) {
+      return {code: error.code, stdout: error.stdout, stderr: error.stderr};
+    } else {
+      throw error;
+    }
+  }
 }
 
 async function git(args: string[]) {
-  const {code, stdout, stderr} = await shell.exec('git', args, {cwd: tmpdir});
-  if (code !== 0) {
-    throw new Error(
-      `Unable to 'git ${args.join(
-        ' '
-      )}: code=${code} stdout=${stdout} stderr=${stderr}`
-    );
-  }
+  await shell.exec('git', args, {cwd: tmpdir});
 }
 async function gitInit() {
   await git(['init']);

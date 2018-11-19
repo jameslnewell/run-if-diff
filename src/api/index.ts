@@ -23,7 +23,7 @@ export default async function(
   args: string[],
   options: Options
 ): Promise<void> {
-  const {since, patterns} = options;
+  const {since, patterns = []} = options;
 
   const ref = since ? since : await getDefaultRef();
   log(`ref: %s`, ref);
@@ -40,6 +40,5 @@ export default async function(
     await passthru(cmd, args);
   } else {
     log(`the command was skipped`);
-    return;
   }
 }

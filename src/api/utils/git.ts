@@ -4,9 +4,7 @@ import * as shell from './shell';
 const log = debug('run-if-diff');
 
 async function hasOneOrMoreTags() {
-  console.log('get tags');
   const {stdout} = await shell.exec('git', ['tag']);
-  console.log('got tags');
   return stdout.trim() !== '';
 }
 

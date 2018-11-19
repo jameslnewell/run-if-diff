@@ -3,6 +3,7 @@
 
 import * as yargs from 'yargs';
 import runIfDiff from '../api';
+import {PassThroughError} from '../api/utils/shell';
 
 (async () => {
   const argv = yargs
@@ -25,12 +26,16 @@ import runIfDiff from '../api';
 
   const [cmd, ...args] = argv.args;
   try {
-    process.exitCode = await runIfDiff(cmd, args, {
+    await runIfDiff(cmd, args, {
       since: argv.since,
-      patterns: argv.file
+      patterns: [].concat(argv.file)
     });
   } catch (error) {
-    console.error(error);
-    process.exitCode = 1;
+    if (error instanceof PassThroughError) {
+      process.exitCode = error.code;
+    } else {
+      console.error(error);
+      process.exitCode = 1;
+    }
   }
 })();

@@ -14,13 +14,13 @@ yarn add run-if-diff
 ## Usage
 
 ```
-run-if-diff [--since <ref>] [--file <glob>] <cmd>
+run-if-diff [--since <ref>] [--file <glob>] -- <cmd>
 ```
 
 Example:
 
 ```
-run-if-diff --since v1.3.1 --file my-app.yml aws cfn deploy --stack-name my-app --template-file my-app.yml
+run-if-diff --since v1.3.1 --file my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
 ```
 
 ## Options

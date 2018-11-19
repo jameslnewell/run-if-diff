@@ -8,9 +8,9 @@ import {
 describe('cli', () => {
   afterEach(async () => await cleanup());
 
-  it.only('should exit successfully before running the command when the files have not changed', async () => {
+  it('should exit successfully before running the command when the files have not changed', async () => {
     await createRepositoryWithoutDiff();
-    const {code, stdout, stderr} = await cli(['ls', '-la']);
+    const {code, stdout, stderr} = await cli(['--', 'ls', '-la']);
     expect(code).toEqual(0);
     expect(stderr).toEqual('');
     expect(stdout).toMatch('');
@@ -18,7 +18,7 @@ describe('cli', () => {
 
   it('should exit successfully after running the command when the files have changed and the command exits successfully', async () => {
     await createRepositoryWithDiff();
-    const {code, stdout, stderr} = await cli(['ls']);
+    const {code, stdout, stderr} = await cli(['--', 'ls']);
     expect(code).toEqual(0);
     expect(stderr).toEqual('');
     expect(stdout).toMatch('package.json');
@@ -26,7 +26,11 @@ describe('cli', () => {
 
   it('should exit with an error after running the command when the files have changed and the command exits with an error', async () => {
     await createRepositoryWithDiff();
-    const {code, stdout, stderr} = await cli(['ls', 'non-existent-directory']);
+    const {code, stdout, stderr} = await cli([
+      '--',
+      'ls',
+      'non-existent-directory'
+    ]);
     expect(code).toEqual(1);
     expect(stdout).toEqual('');
     expect(stderr).toMatch('No such file or directory');
@@ -34,12 +38,12 @@ describe('cli', () => {
 
   it('should exit successfully after running the command when the files have changed and the command exits successfully', async () => {
     await createRepositoryWithDiff();
-    const {code, stdout, stderr} = await cli(['ls']);
+    const {code, stdout, stderr} = await cli(['--', 'ls']);
     expect(code).toEqual(0);
     expect(stderr).toEqual('');
     expect(stdout).toMatch('package.json');
   });
 
-  // TODO: test since
-  // TODO: test pattern
+  // TODO: test --since
+  // TODO: test --file
 });
