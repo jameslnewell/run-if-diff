@@ -25,28 +25,16 @@ async function git(args: string[]) {
     );
   }
 }
-async function gitInit() {}
+async function gitInit() {
+  await git(['init']);
+}
 
 async function gitAdd() {
-  const {code, stdout, stderr} = await exec('git', ['add', '-A']);
-  if (code !== 0) {
-    throw new Error(
-      `Unable to 'git add': code=${code} stdout=${stdout} stderr=${stderr}`
-    );
-  }
+  await git(['add', '-A']);
 }
 
 async function gitCommit() {
-  const {code, stdout, stderr} = await exec('git', [
-    'commit',
-    '-am',
-    'sample commit'
-  ]);
-  if (code !== 0) {
-    throw new Error(
-      `Unable to 'git commit': code=${code} stdout=${stdout} stderr=${stderr}`
-    );
-  }
+  await git(['commit', '-am', 'sample commit']);
 }
 
 export async function setupRepositoryWithDiff() {
