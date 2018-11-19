@@ -17,18 +17,20 @@ yarn add run-if-diff
 run-if-diff [--since <ref>] [--file <glob>] <cmd>
 ```
 
+Example:
+
 ```
-run-if-diff --since master --file '*.yml' long-running-command
+run-if-diff --since v1.3.1 --file my-app.yml aws cfn deploy --stack-name my-app --template-file my-app.yml
 ```
 
 ## Options
 
-### since
+### `--since`
 
-The git ref to compare the files in the current working directory to. Defaults to the last tag or commit.
+The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
 
-### file
+### `--file`
 
-A file name or a glob that determines whether the command is run
+A file or a glob that must be different for the command to be run.
 
-If you specify multiple file options, the command will be run if **any** of the files are matched.
+If you specify multiple `--file` options, the command will run if _any_ of the `--file` options are matched.
