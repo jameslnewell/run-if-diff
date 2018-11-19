@@ -6,6 +6,7 @@ import runIfDiff from '../api';
 
 (async () => {
   const argv = yargs
+    .strict()
     .help()
     .usage('$0 <args...>', 'runs a command if the files are different', {
       since: {

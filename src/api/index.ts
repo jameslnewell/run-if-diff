@@ -1,7 +1,7 @@
 // tslint:disable no-console
 import * as debug from 'debug';
 import * as mm from 'micromatch';
-import {diff, getLastCommit} from './utils/git';
+import {diff, getDefaultRef} from './utils/git';
 import {passthru} from './utils/shell';
 
 export interface Options {
@@ -11,26 +11,35 @@ export interface Options {
 
 const log = debug('run-if-diff');
 
+function formatFiles(files: string[]) {
+  if (files.length === 0) {
+    return 'none';
+  }
+  return `\n\t- ${files.join('\n\t- ')}`;
+}
+
 export default async function(
   cmd: string,
   args: string[],
   options: Options
-): Promise<number> {
+): Promise<void> {
   const {since, patterns} = options;
 
-  const ref = since ? since : await getLastCommit();
-  log(`git ref: %s`, ref);
+  const ref = since ? since : await getDefaultRef();
+  log(`ref: %s`, ref);
+  log(`cmd: ${cmd} ${args.join(' ')}`);
 
-  const files = await diff(ref);
-  log(`diff count: %s files`, files.length);
+  const changed = await diff(ref);
+  log(`${changed.length} files changed: ${formatFiles(changed)}\n`);
 
-  const matches = mm(files, patterns);
-  log(`match count: %s files`, matches.length);
+  const matched = mm(changed, patterns);
+  log(`${matched.length} files matched: ${formatFiles(matched)}\n`);
 
-  if (matches.length) {
-    const {code} = await passthru(cmd, args);
-    return code;
+  if (matched.length) {
+    log(`the command was executed`);
+    await passthru(cmd, args);
   } else {
-    return 0;
+    log(`the command was skipped`);
+    return;
   }
 }

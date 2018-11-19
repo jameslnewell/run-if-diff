@@ -1,29 +1,42 @@
-import {exec} from './shell';
+import * as debug from 'debug';
+import * as shell from './shell';
 
-export type DiffStatus = 'added' | 'changed' | 'deleted';
+const log = debug('run-if-diff');
 
-export async function getLastCommit(): Promise<string> {
-  const {code: hasTagCode} = await exec('git', ['tag']);
-  if (hasTagCode === 0) {
-    const {code, stdout} = await exec('git', [
-      'describe',
-      '--tags',
-      '--abbrev=0'
-    ]);
-    if (code === 0) {
-      return stdout.split('\n')[0];
-    }
+async function hasOneOrMoreTags() {
+  console.log('get tags');
+  const {stdout} = await shell.exec('git', ['tag']);
+  console.log('got tags');
+  return stdout.trim() !== '';
+}
+
+async function getMostRecentTag() {
+  const {stdout} = await shell.exec('git', [
+    'describe',
+    '--tags',
+    '--abbrev=0'
+  ]);
+  return stdout.split('\n')[0];
+}
+
+async function getFirstCommit() {
+  const {stdout} = await shell.exec('git', [
+    'rev-list',
+    '--max-parents=0',
+    'HEAD'
+  ]);
+  return stdout.split('\n')[0];
+}
+
+export async function getDefaultRef(): Promise<string> {
+  const hasTags = await hasOneOrMoreTags();
+  if (hasTags) {
+    log('the repo has tags, defaulting to the most recent tag');
+    return await getMostRecentTag();
   } else {
-    const {code, stdout} = await exec('git', [
-      'rev-list',
-      '--max-parents=0',
-      'HEAD'
-    ]);
-    if (code === 0) {
-      return stdout.split('\n')[0];
-    }
+    log('the repo has no tags, defaulting to the first commit');
+    return await getFirstCommit();
   }
-  throw new Error('Unable to retrieve a ref.');
 }
 
 export async function diff(ref?: string): Promise<string[]> {
@@ -32,10 +45,6 @@ export async function diff(ref?: string): Promise<string[]> {
   if (ref) {
     args.push(ref);
   }
-  const {code, stdout, stderr} = await exec(cmd, args);
-  if (code === 0) {
-    return stdout.split('\n').filter(file => file !== '');
-  } else {
-    throw new Error(stderr);
-  }
+  const {code, stdout, stderr} = await shell.exec(cmd, args);
+  return stdout.split('\n').filter(file => file !== '');
 }
