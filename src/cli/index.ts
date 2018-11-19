@@ -11,12 +11,14 @@ import {PassThroughError} from '../api/utils/shell';
     .help()
     .usage('$0 <args...>', 'runs a command if the files are different', {
       since: {
+        alias: 's',
         default: undefined,
         requiresArg: true,
         type: 'string',
         describe: 'The git ref to diff the current working directory with.'
       },
       file: {
+        alias: 'f',
         default: ['**'],
         requiresArg: true,
         type: 'string',
