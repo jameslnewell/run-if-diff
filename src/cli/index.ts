@@ -4,8 +4,7 @@
 import * as yargs from 'yargs';
 import runIfDiff from '../api';
 
-(() => {
-
+(async () => {
   const argv = yargs
     .help()
     .usage('$0 <args...>', 'runs a command if the files are different', {
@@ -18,17 +17,19 @@ import runIfDiff from '../api';
       file: {
         default: ['**'],
         requiresArg: true,
-        type: 'array',
+        type: 'string',
         describe: 'The file(s) to diff'
-      },
-    })
-    .argv
-  ;
+      }
+    }).argv;
 
   const [cmd, ...args] = argv.args;
-  runIfDiff(cmd, args, {
-    since: argv.since,
-    patterns: argv.file
-  });
-
+  try {
+    process.exitCode = await runIfDiff(cmd, args, {
+      since: argv.since,
+      patterns: argv.file
+    });
+  } catch (error) {
+    console.error(error);
+    process.exitCode = 1;
+  }
 })();

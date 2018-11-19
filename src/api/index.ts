@@ -1,6 +1,7 @@
 // tslint:disable no-console
+import * as debug from 'debug';
 import * as mm from 'micromatch';
-import {diff} from './utils/git';
+import {diff, getLastCommit} from './utils/git';
 import {passthru} from './utils/shell';
 
 export interface Options {
@@ -8,22 +9,28 @@ export interface Options {
   patterns?: string[];
 }
 
-export default async function(cmd: string, args: string[], options: Options) {
-  try {
-    const {
-      since, 
-      patterns
-    } = options;
+const log = debug('run-if-diff');
 
-    const files = await diff(since);
-    const matches = mm(files, patterns);
-    if (matches.length) {
-      const {code} = await passthru(cmd, args);
-      process.exitCode = code;
-    }
+export default async function(
+  cmd: string,
+  args: string[],
+  options: Options
+): Promise<number> {
+  const {since, patterns} = options;
 
-  } catch (error) {
-    console.error(error);
-    process.exitCode = 1;
+  const ref = since ? since : await getLastCommit();
+  log(`git ref: %s`, ref);
+
+  const files = await diff(ref);
+  log(`diff count: %s files`, files.length);
+
+  const matches = mm(files, patterns);
+  log(`match count: %s files`, matches.length);
+
+  if (matches.length) {
+    const {code} = await passthru(cmd, args);
+    return code;
+  } else {
+    return 0;
   }
-};
+}

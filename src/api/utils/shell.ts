@@ -1,21 +1,24 @@
 import {spawn} from 'child_process';
 
-export function exec(cmd: string, args: string[]): Promise<{code: number; stdout: string; stderr: string;}> {
+export function exec(
+  cmd: string,
+  args: string[]
+): Promise<{code: number; stdout: string; stderr: string}> {
   let stdout = '';
   let stderr = '';
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args);
-    child.stdout.on('data', (data) => {
+    child.stdout.on('data', data => {
       stdout += data;
     });
-    child.stderr.on('data', (data) => {
+    child.stderr.on('data', data => {
       stderr += data;
     });
-    child.on('error', (error) => {
+    child.on('error', error => {
       reject(error);
     });
-    child.on('close', (code) => {
-      resolve({code, stdout, stderr});
+    child.on('close', code => {
+      resolve({code, stdout: stdout.trim(), stderr: stderr.trim()});
     });
   });
 }
@@ -23,10 +26,10 @@ export function exec(cmd: string, args: string[]): Promise<{code: number; stdout
 export function passthru(cmd: string, args: string[]): Promise<{code: number}> {
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, {stdio: 'inherit'});
-    child.on('error', (error) => {
+    child.on('error', error => {
       reject(error);
     });
-    child.on('close', (code) => {
+    child.on('close', code => {
       resolve({code});
     });
   });
