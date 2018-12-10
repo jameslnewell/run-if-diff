@@ -1,7 +1,7 @@
 {
   "name": "run-if-diff",
-  "version": "1.1.2",
-  "description": "Run a command if files are different.",
+  "version": "2.0.0",
+  "description": "Run a command if files have changed.",
   "keywords": [
     "git",
     "diff",
@@ -9,12 +9,16 @@
     "run",
     "changed",
     "modified",
-    "file"
+    "file",
+    "run-if-diff",
+    "exit-if-diff",
+    "run-if-changed"
   ],
   "repository": "jameslnewell/run-if-diff",
   "main": "lib/api/index.js",
   "bin": {
-    "run-if-diff": "lib/cli/index.js"
+    "run-if-diff": "lib/cli/run-if-diff.js",
+    "exit-if-diff": "lib/cli/exit-if-diff.js"
   },
   "files": [
     "lib"

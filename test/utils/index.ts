@@ -8,7 +8,7 @@ export async function cli(args: string[]) {
   try {
     return await shell.exec(
       'ts-node',
-      [`${__dirname}/../../src/cli/index.ts`, '--', ...args],
+      [`${__dirname}/../../src/cli/run-if-diff.ts`, '--', ...args],
       {cwd: tmpdir}
     );
   } catch (error) {

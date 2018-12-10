@@ -13,29 +13,66 @@ yarn add run-if-diff
 
 ## Usage
 
+### `run-if-diff`
+
 ```
 run-if-diff [--since <ref>] [--file <glob>] -- <cmd>
 ```
 
 Example:
 
-```
+```bash
 run-if-diff --since v1.3.1 --file my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
+```
+
+### `exit-if-diff`
+
+```
+exit-if-diff [--since <ref>] [--file <glob>]
+```
+
+Example:
+
+```bash
+exit-if-diff --since v1.3.1 --file my-app.yml
+if [ $? -ne 0 ]
+  aws cfn deploy --stack-name my-app --template-file my-app.yml
+fi
 ```
 
 ## CLI
 
-### Options
+### `run-if-diff`
 
-#### `--since`
+Run a command if files have changed.
+
+#### Options
+
+##### `--since`
 
 The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
 
-#### `--file`
+##### `--file`
 
 A file or a glob that must be different for the command to be run.
 
 If you specify multiple `--file` options, the command will run if _any_ of the `--file` options are matched.
+
+### `exit-if-diff`
+
+Exit if files have changed.
+
+#### Options
+
+##### `--since`
+
+The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
+
+##### `--file`
+
+A file or a glob that must be different for the command to exit.
+
+If you specify multiple `--file` options, the command will exit if _any_ of the `--file` options are matched.
 
 ## Credits
 
