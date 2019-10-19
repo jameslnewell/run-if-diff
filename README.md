@@ -60,7 +60,7 @@ If you specify multiple `--file` options, the command will run if _any_ of the `
 
 ### `exit-if-diff`
 
-Exit if files have changed.
+Exit with code `128` if files have changed and with code `0` otherwise.
 
 #### Options
 
