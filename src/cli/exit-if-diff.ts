@@ -4,21 +4,22 @@
 import * as debug from 'debug';
 import * as yargs from 'yargs';
 import {diff} from '../api';
-import * as options from './utils/options';
+import {Options, since, file} from './utils/options';
 import {diffResult as logDiffResult} from './utils/log';
 
 const log = debug('exit-if-diff');
 
 (async () => {
-  const argv = yargs
+  const argv = (yargs
     .strict()
     .help()
-    .usage('$0', 'exit if files have changed', options).argv;
+    .usage('$0', 'exit if files have changed', {since, file})
+    .argv as any) as Options;
 
   try {
     const result = await diff({
       since: argv.since,
-      files: [].concat(argv.file)
+      files: Array.isArray(argv.file) ? argv.file : [argv.file]
     });
     logDiffResult(log, result);
     if (result.matched.length) {

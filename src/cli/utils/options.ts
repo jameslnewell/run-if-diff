@@ -1,5 +1,11 @@
 import yargs = require('yargs');
 
+export interface Options {
+  _: string[];
+  file: string | string[];
+  since?: string;
+}
+
 export const since: yargs.Options = {
   alias: 's',
   default: undefined,
