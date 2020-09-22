@@ -90,9 +90,9 @@ The git ref to compare files in the current working directory to. Defaults to th
 
 ##### `--file`
 
-A file or a glob that must be different for the command to exit.
+A file or a glob that must be different for the command to list the files.
 
-If you specify multiple `--file` options, the command will exit if _any_ of the `--file` options are matched.
+If you specify multiple `--file` options, the command will list if _any_ of the `--file` options are matched.
 
 ## Credits
 
