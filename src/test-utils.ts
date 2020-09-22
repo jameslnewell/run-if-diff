@@ -1,25 +1,31 @@
-import * as os from 'os';
-import * as fs from 'fs-extra';
-import * as shell from './api/utils/shell';
+import * as os from "os";
+import * as fs from "fs-extra";
+import * as shell from "./api/utils/shell";
 
 let tmpdir: string | undefined = undefined;
 
 export interface CLIResult {
-  code: number; 
-  stdout: string; 
+  code: number;
+  stdout: string;
   stderr: string;
 }
 
 export async function cli(command: string, args: string[]): Promise<CLIResult> {
   try {
     return await shell.exec(
-      'ts-node',
-      ['--project', `${__dirname}/../tsconfig.compile.json`, `${__dirname}/../src/cli/${command}.ts`, '--', ...args],
-      {cwd: tmpdir},
+      "ts-node",
+      [
+        "--project",
+        `${__dirname}/../tsconfig.compile.json`,
+        `${__dirname}/../src/cli/${command}.ts`,
+        "--",
+        ...args,
+      ],
+      { cwd: tmpdir }
     );
   } catch (error) {
     if (error instanceof shell.ExecError) {
-      return {code: error.code, stdout: error.stdout, stderr: error.stderr};
+      return { code: error.code, stdout: error.stdout, stderr: error.stderr };
     } else {
       throw error;
     }
@@ -27,18 +33,18 @@ export async function cli(command: string, args: string[]): Promise<CLIResult> {
 }
 
 async function git(args: string[]): Promise<void> {
-  await shell.exec('git', args, {cwd: tmpdir});
+  await shell.exec("git", args, { cwd: tmpdir });
 }
 async function gitInit(): Promise<void> {
-  await git(['init']);
+  await git(["init"]);
 }
 
 async function gitAdd(): Promise<void> {
-  await git(['add', '-A']);
+  await git(["add", "-A"]);
 }
 
 async function gitCommit(): Promise<void> {
-  await git(['commit', '-am', 'sample commit']);
+  await git(["commit", "-am", "sample commit"]);
 }
 
 async function createDirectory(): Promise<void> {

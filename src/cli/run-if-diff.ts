@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 /* tslint:disable: no-console no-var-requires */
 
-import debug from 'debug';
-import yargs from 'yargs';
-import {diff, passthru, PassThroughError} from '../api';
-import {Options, since, file} from './utils/options';
-import {diffResult as logDiffResult} from './utils/log';
+import debug from "debug";
+import yargs from "yargs";
+import { diff, passthru, PassThroughError } from "../api";
+import { Options, since, file } from "./utils/options";
+import { diffResult as logDiffResult } from "./utils/log";
 
-const log = debug('run-if-diff');
+const log = debug("run-if-diff");
 
 (async () => {
-  const argv = yargs
+  const argv = (yargs
     .strict()
     .help()
-    .usage('$0', 'run a command if files have changed', {since, file})
-    .argv as unknown as Options;
+    .usage("$0", "run a command if files have changed", { since, file })
+    .argv as unknown) as Options;
 
   const [cmd, ...args] = argv._;
 
   if (!cmd) {
-    console.error('No command specified.');
+    console.error("No command specified.");
     process.exitCode = 1;
     return;
   }
@@ -31,7 +31,7 @@ const log = debug('run-if-diff');
     });
     logDiffResult(log, result);
     if (result.matched.length) {
-      log(`spawning: ${cmd} ${args.join(' ')}`);
+      log(`spawning: ${cmd} ${args.join(" ")}`);
       await passthru(cmd, args);
     }
   } catch (error) {

@@ -1,5 +1,5 @@
-import mm from 'micromatch';
-import * as git from './git';
+import mm from "micromatch";
+import * as git from "./git";
 
 export interface DiffOptions {
   since?: string;
@@ -13,7 +13,7 @@ export interface DiffResult {
 }
 
 export async function diff(options: DiffOptions): Promise<DiffResult> {
-  const {since, files = []} = options;
+  const { since, files = [] } = options;
   const ref = since ? since : await git.getDefaultRef();
   const changed = await git.diff(ref);
   const matched = mm(changed, files);
