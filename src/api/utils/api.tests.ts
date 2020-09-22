@@ -1,5 +1,5 @@
 describe('api', () => {
-  it('should pass', () => {
+  test('should pass', () => {
     // TODO:
   });
 });

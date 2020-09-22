@@ -5,15 +5,14 @@ import debug from 'debug';
 import yargs from 'yargs';
 import {diff} from '../api';
 import {Options, since, file} from './utils/options';
-import {diffResult as logDiffResult} from './utils/log';
 
-const log = debug('exit-if-diff');
+const log = debug('list-if-diff');
 
 (async () => {
   const argv = yargs
     .strict()
     .help()
-    .usage('$0', 'exit if files have changed', {since, file})
+    .usage('$0', 'list files which have changed', {since, file})
     .argv as unknown as Options;
 
   try {
@@ -21,14 +20,9 @@ const log = debug('exit-if-diff');
       since: argv.since,
       files: Array.isArray(argv.file) ? argv.file : [argv.file],
     });
-    logDiffResult(log, result);
-    if (result.matched.length) {
-      log(`exit code: 128`);
-      process.exitCode = 128;
-    } else {
-      log(`exit code: 0`);
-      process.exitCode = 0;
-    }
+    result.matched.forEach(file => console.log(file));
+    log(`exit code: 0`);
+    process.exitCode = 0;
   } catch (error) {
     log(`exit code: 1`);
     console.error(error);

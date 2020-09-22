@@ -1,6 +1,6 @@
 {
   "name": "run-if-diff",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Run a command if files have changed.",
   "keywords": [
     "git",
@@ -18,7 +18,8 @@
   "main": "lib/api/index.js",
   "bin": {
     "run-if-diff": "lib/cli/run-if-diff.js",
-    "exit-if-diff": "lib/cli/exit-if-diff.js"
+    "exit-if-diff": "lib/cli/exit-if-diff.js",
+    "list-if-diff": "lib/cli/list-if-diff.js"
   },
   "files": [
     "lib"
@@ -28,39 +29,59 @@
   },
   "dependencies": {
     "@types/debug": "^4.1.5",
-    "@types/micromatch": "^3.1.0",
-    "@types/yargs": "^13.0.3",
-    "debug": "^4.1.1",
+    "@types/micromatch": "^4.0.1",
+    "@types/node": "^14.11.1",
+    "@types/yargs": "^15.0.5",
+    "debug": "^4.2.0",
     "micromatch": "^4.0.2",
-    "yargs": "^14.2.0"
+    "yargs": "^16.0.3"
   },
   "devDependencies": {
-    "@tradie/node-scripts": "^1.2.1",
-    "@types/fs-extra": "^5.0.4",
-    "@types/jest": "^23.3.2",
-    "fs-extra": "^7.0.1",
-    "husky": "^1.1.0",
-    "lint-staged": "^7.3.0",
-    "prettier": "^1.14.3"
+    "@babel/core": "^7.11.6",
+    "@jameslnewell/babel-preset": "^2.1.0",
+    "@jameslnewell/editor-config": "^1.0.1",
+    "@jameslnewell/eslint-config": "^0.16.0",
+    "@jameslnewell/jest-preset": "^2.0.0",
+    "@jameslnewell/prettier-config": "^1.0.1",
+    "@jameslnewell/typescript-config": "^3.0.0",
+    "@types/fs-extra": "^9.0.1",
+    "@types/jest": "^26.0.14",
+    "eslint": "^7.9.0",
+    "fs-extra": "^9.0.1",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.0.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
   },
-  "scripts": {
-    "clean": "node-scripts clean",
-    "build": "node-scripts build",
-    "watch": "node-scripts build --watch",
-    "test": "node-scripts test",
-    "example": "node-scripts example",
-    "prepublishOnly": "npm run clean && npm run build && npm run test"
+  "babel": {
+    "presets": [
+      "@jameslnewell/babel-preset"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "@jameslnewell/eslint-config"
+  },
+  "jest": {
+    "preset": "@jameslnewell/jest-preset"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "precommit": [
+        "pretty-quick --staged",
+        "git add"
+      ]
     }
   },
-  "lint-staged": {
-    "*.{ts,md,json}": [
-      "prettier --write --single-quote --no-bracket-spacing",
-      "git add"
-    ]
+  "scripts": {
+    "clean": "rm -rf lib",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "type": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.compile.json",
+    "test": "jest",
+    "prepublishOnly": "npm run clean && npm run format && npm run lint && npm run build && npm run test"
   },
   "license": "MIT"
 }

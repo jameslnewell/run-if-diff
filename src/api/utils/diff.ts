@@ -1,4 +1,4 @@
-import * as mm from 'micromatch';
+import mm from 'micromatch';
 import * as git from './git';
 
 export interface DiffOptions {
@@ -20,6 +20,6 @@ export async function diff(options: DiffOptions): Promise<DiffResult> {
   return {
     ref,
     changed,
-    matched
+    matched,
   };
 }

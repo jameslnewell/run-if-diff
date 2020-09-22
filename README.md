@@ -3,7 +3,7 @@
 [![satay](https://img.shields.io/npm/v/run-if-diff.svg)](https://www.npmjs.com/package/run-if-diff)
 [![Travis](https://img.shields.io/travis/jameslnewell/run-if-diff.svg)](https://travis-ci.org/jameslnewell/run-if-diff)
 
-Run a command if files are different.
+Run a command if files are different (plus a few other related utilities).
 
 ## Installation
 
@@ -15,6 +15,8 @@ yarn add run-if-diff
 
 ### `run-if-diff`
 
+Run a command if files have changed.
+
 ```
 run-if-diff [--since <ref>] [--file <glob>] -- <cmd>
 ```
@@ -24,27 +26,6 @@ Example:
 ```bash
 run-if-diff --since v1.3.1 --file my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
 ```
-
-### `exit-if-diff`
-
-```
-exit-if-diff [--since <ref>] [--file <glob>]
-```
-
-Example:
-
-```bash
-exit-if-diff --since v1.3.1 --file my-app.yml
-if [ $? -ne 0 ]
-  aws cfn deploy --stack-name my-app --template-file my-app.yml
-fi
-```
-
-## CLI
-
-### `run-if-diff`
-
-Run a command if files have changed.
 
 #### Options
 
@@ -61,6 +42,45 @@ If you specify multiple `--file` options, the command will run if _any_ of the `
 ### `exit-if-diff`
 
 Exit with code `128` if files have changed and with code `0` otherwise.
+
+```
+exit-if-diff [--since <ref>] [--file <glob>]
+```
+
+Example:
+
+```bash
+exit-if-diff --since v1.3.1 --file my-app.yml
+if [ $? -eq 128 ]
+  aws cfn deploy --stack-name my-app --template-file my-app.yml
+fi
+```
+
+#### Options
+
+##### `--since`
+
+The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
+
+##### `--file`
+
+A file or a glob that must be different for the command to exit.
+
+If you specify multiple `--file` options, the command will exit if _any_ of the `--file` options are matched.
+
+### `list-if-diff`
+
+List files that have changed.
+
+```
+list-if-diff [--since <ref>] [--file <glob>]
+```
+
+Example:
+
+```bash
+list-if-diff --since v1.3.1 --file my-app.yml
+```
 
 #### Options
 

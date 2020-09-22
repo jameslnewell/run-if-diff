@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* tslint:disable: no-console no-var-requires */
 
-import * as debug from 'debug';
-import * as yargs from 'yargs';
+import debug from 'debug';
+import yargs from 'yargs';
 import {diff, passthru, PassThroughError} from '../api';
 import {Options, since, file} from './utils/options';
 import {diffResult as logDiffResult} from './utils/log';
@@ -10,11 +10,11 @@ import {diffResult as logDiffResult} from './utils/log';
 const log = debug('run-if-diff');
 
 (async () => {
-  const argv = (yargs
+  const argv = yargs
     .strict()
     .help()
     .usage('$0', 'run a command if files have changed', {since, file})
-    .argv as any) as Options;
+    .argv as unknown as Options;
 
   const [cmd, ...args] = argv._;
 
@@ -27,7 +27,7 @@ const log = debug('run-if-diff');
   try {
     const result = await diff({
       since: argv.since,
-      files: Array.isArray(argv.file) ? argv.file : [argv.file]
+      files: Array.isArray(argv.file) ? argv.file : [argv.file],
     });
     logDiffResult(log, result);
     if (result.matched.length) {
@@ -36,8 +36,10 @@ const log = debug('run-if-diff');
     }
   } catch (error) {
     if (error instanceof PassThroughError) {
+      log(`exit code: ${error.code}`);
       process.exitCode = error.code;
     } else {
+      log(`exit code: 1`);
       console.error(error);
       process.exitCode = 1;
     }

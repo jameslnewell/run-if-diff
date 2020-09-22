@@ -1,4 +1,4 @@
-import yargs = require('yargs');
+import yargs from 'yargs';
 
 export interface Options {
   _: string[];
@@ -11,7 +11,7 @@ export const since: yargs.Options = {
   default: undefined,
   requiresArg: true,
   type: 'string',
-  describe: 'The git ref to diff the current working directory with.'
+  describe: 'The git ref to diff the current working directory with.',
 };
 
 export const file: yargs.Options = {
@@ -19,5 +19,5 @@ export const file: yargs.Options = {
   default: ['**'],
   requiresArg: true,
   type: 'string',
-  describe: 'The file(s) to diff'
+  describe: 'The file(s) to diff',
 };

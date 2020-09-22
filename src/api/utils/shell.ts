@@ -6,10 +6,10 @@ export class ExecError extends Error {
     readonly cmd: string,
     readonly code: number,
     readonly stdout: string,
-    readonly stderr: string
+    readonly stderr: string,
   ) {
     super(
-      `exec() failed:\n   cmd=${cmd}\n  code=${code}\n  ${stdout}\n  ${stderr}`
+      `exec() failed:\n   cmd=${cmd}\n  code=${code}\n  ${stdout}\n  ${stderr}`,
     );
   }
 }
@@ -23,22 +23,22 @@ export class PassThroughError extends Error {
 export function exec(
   cmd: string,
   args: string[],
-  options: {cwd?: string} = {}
+  options: {cwd?: string} = {},
 ): Promise<{code: number; stdout: string; stderr: string}> {
   let stdout = '';
   let stderr = '';
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, options);
-    child.stdout.on('data', data => {
+    child.stdout.on('data', (data) => {
       stdout += data;
     });
-    child.stderr.on('data', data => {
+    child.stderr.on('data', (data) => {
       stderr += data;
     });
-    child.on('error', error => {
+    child.on('error', (error) => {
       reject(error);
     });
-    child.on('close', code => {
+    child.on('close', (code) => {
       if (code === 0) {
         resolve({code, stdout, stderr});
       } else {
@@ -51,14 +51,14 @@ export function exec(
 export function passthru(
   cmd: string,
   args: string[],
-  options: {cwd?: string} = {}
+  options: {cwd?: string} = {},
 ): Promise<{code: number}> {
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, {...options, stdio: 'inherit'});
-    child.on('error', error => {
+    child.on('error', (error) => {
       reject(error);
     });
-    child.on('close', code => {
+    child.on('close', (code) => {
       if (code === 0) {
         resolve({code});
       } else {

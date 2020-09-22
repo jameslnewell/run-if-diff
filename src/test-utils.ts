@@ -1,15 +1,21 @@
 import * as os from 'os';
 import * as fs from 'fs-extra';
-import * as shell from '../../src/api/utils/shell';
+import * as shell from './api/utils/shell';
 
 let tmpdir: string | undefined = undefined;
 
-export async function cli(args: string[]) {
+export interface CLIResult {
+  code: number; 
+  stdout: string; 
+  stderr: string;
+}
+
+export async function cli(command: string, args: string[]): Promise<CLIResult> {
   try {
     return await shell.exec(
       'ts-node',
-      [`${__dirname}/../../src/cli/run-if-diff.ts`, '--', ...args],
-      {cwd: tmpdir}
+      ['--project', `${__dirname}/../tsconfig.compile.json`, `${__dirname}/../src/cli/${command}.ts`, '--', ...args],
+      {cwd: tmpdir},
     );
   } catch (error) {
     if (error instanceof shell.ExecError) {
@@ -20,32 +26,32 @@ export async function cli(args: string[]) {
   }
 }
 
-async function git(args: string[]) {
+async function git(args: string[]): Promise<void> {
   await shell.exec('git', args, {cwd: tmpdir});
 }
-async function gitInit() {
+async function gitInit(): Promise<void> {
   await git(['init']);
 }
 
-async function gitAdd() {
+async function gitAdd(): Promise<void> {
   await git(['add', '-A']);
 }
 
-async function gitCommit() {
+async function gitCommit(): Promise<void> {
   await git(['commit', '-am', 'sample commit']);
 }
 
-async function createDirectory() {
+async function createDirectory(): Promise<void> {
   tmpdir = await fs.mkdtemp(`${os.tmpdir()}/run-if-diff`);
 }
 
-async function createSampleFiles() {
+async function createSampleFiles(): Promise<void> {
   await fs.writeFile(`${tmpdir}/package.json`, '{"name": "foobar"}');
   await fs.mkdirs(`${tmpdir}/src`);
   await fs.writeFile(`${tmpdir}/index.js`, 'console.log("Hello World!");');
 }
 
-export async function createRepositoryWithoutDiff() {
+export async function createRepositoryWithoutDiff(): Promise<void> {
   await createDirectory();
   await gitInit();
   await createSampleFiles();
@@ -53,16 +59,17 @@ export async function createRepositoryWithoutDiff() {
   await gitCommit();
 }
 
-export async function createRepositoryWithDiff() {
+export async function createRepositoryWithDiff(): Promise<void> {
   await createDirectory();
   await gitInit();
   await createSampleFiles();
   await gitAdd();
   await gitCommit();
   await fs.writeFile(`${tmpdir}/package.json`, '{"name": "barfoo"}');
+  await fs.writeFile(`${tmpdir}/index.js`, 'console.log("hello world!");');
 }
 
-export async function cleanup() {
+export async function cleanup(): Promise<void> {
   if (tmpdir) {
     await fs.emptyDir(tmpdir);
     await fs.remove(tmpdir);
