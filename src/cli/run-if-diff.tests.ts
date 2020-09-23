@@ -9,7 +9,7 @@ import {
 const runIfDiff = (args: string[]): Promise<CLIResult> =>
   cli("run-if-diff", args);
 
-describe.skip("run-if-diff", () => {
+describe("run-if-diff", () => {
   afterEach(async () => await cleanup());
 
   test("should exit successfully before running the command when the files have not changed", async () => {
