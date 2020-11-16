@@ -1,7 +1,7 @@
 # run-if-diff
 
-[![satay](https://img.shields.io/npm/v/run-if-diff.svg)](https://www.npmjs.com/package/run-if-diff)
-[![Travis](https://img.shields.io/travis/jameslnewell/run-if-diff.svg)](https://travis-ci.org/jameslnewell/run-if-diff)
+[![run-if-diff](https://img.shields.io/npm/v/run-if-diff.svg)](https://www.npmjs.com/package/run-if-diff)
+![run-if-diff](https://github.com/jameslnewell/run-if-diff/workflows/CI/badge.svg)
 
 Run a command if files are different (plus a few other related utilities).
 
