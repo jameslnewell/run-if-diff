@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: git fetch --depth=1 origin 3.0.0
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
         with:
