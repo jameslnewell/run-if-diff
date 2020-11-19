@@ -64,7 +64,7 @@ describe("api", () => {
         const statuses = await diff({
           cwd: getDirectory(),
           ref: "HEAD~1",
-          paths: []
+          paths: [],
         });
         expect(statuses).toEqual({
           "README.md": "A",
@@ -79,7 +79,7 @@ describe("api", () => {
         const statuses = await diff({
           cwd: getDirectory(),
           ref: "HEAD~1",
-          statuses: []
+          statuses: [],
         });
         expect(statuses).toEqual({
           "README.md": "A",
@@ -88,7 +88,6 @@ describe("api", () => {
           "package.json": "M",
         });
       });
-
     });
   });
 });

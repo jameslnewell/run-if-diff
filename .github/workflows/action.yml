@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git fetch --depth=1 origin 3.0.0
+      - run: git fetch --depth=1 origin first-tag
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
         with:
-          since: 3.0.0
+          since: first-tag
       - name: Get the ref
         run: echo "ref=${{ steps.run-if-diff.outputs.ref }}"
       - name: Get the files
