@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: run-if-diff
-        uses: jameslnewell/run-if-diff
+        uses: jameslnewell/run-if-diff@master
       - name: Get the ref
         run: echo "ref=${{ steps.run-if-diff.outputs.ref }}"
       - name: Get the files
