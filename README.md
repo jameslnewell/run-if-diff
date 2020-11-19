@@ -91,14 +91,31 @@ If you specify multiple `--file-status` options, files matching _any_ of the opt
 
 ```yml
 steps:
+
   - uses: actions/checkout@v2
+
   - uses: jameslnewell/run-if-diff@master
     with:
       file-path: |
         apps/**/*.tsx
         packages/**/*.tsx
       file-status: |
-        d
+        A
+        M
+    
+  - name: Get the ref
+    run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'
+
+  - name: Get the file count
+    run: 'echo "count: ${{ steps.run-if-diff.outputs.count }}"'
+
+  - name: Get the file paths
+    run: 'echo -e "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
+
+  - name: Conditionally run commands
+    if: ${{ steps.run-if-diff.outputs.count >= 0 }}
+    run: echo "expensive operation..."
+
 ```
 
 #### cwd

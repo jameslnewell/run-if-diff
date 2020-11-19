@@ -9,19 +9,27 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v2
-      - run: git fetch --depth 1 origin refs/tags/first-tag:refs/tags/first-tag
-      - id: run-if-diff
-        uses: jameslnewell/run-if-diff@master
+
+      - uses: jameslnewell/run-if-diff@master
         with:
-          since: first-tag
-          file-paths: "**/*.md"
-          file-status: "d"
+          file-path: |
+            apps/**/*.tsx
+            packages/**/*.tsx
+          file-status: |
+            A
+            M
+        
       - name: Get the ref
         run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'
+
       - name: Get the file count
         run: 'echo "count: ${{ steps.run-if-diff.outputs.count }}"'
+
       - name: Get the file paths
         run: 'echo -e "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
-      - if: ${{ steps.run-if-diff.outputs.count >= 0 }}
+
+      - name: Conditionally run commands
+        if: ${{ steps.run-if-diff.outputs.count >= 0 }}
         run: echo "expensive operation..."
