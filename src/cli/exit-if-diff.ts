@@ -3,24 +3,42 @@
 
 import yargs from "yargs";
 import { diff } from "../api";
-import { CLIOptions, options, getAPIOptionsFromCLIOptions } from "./utils/options";
+import {
+  CLIOptions,
+  options,
+  getAPIOptionsFromCLIOptions,
+} from "./utils/options";
 import * as debug from "./utils/debug";
 
 (async () => {
   const argv = (yargs
     .strict()
     .help()
-    .usage("$0", "exit if files have changed", options)
-    .argv as unknown) as CLIOptions;
+    .usage("$0", "exit if files have changed", {
+      ...options,
+      'exit-code-when-changed': {
+        default: 128,
+        requiresArg: true,
+        type: "number",
+        describe: "The exit code when matching files have changed.",
+      },
+      'exit-code-when-unchanged': {
+        default: 0,
+        requiresArg: true,
+        type: "number",
+        describe: "The exit code when no matching files have changed.",
+      },
+    })
+    .argv as unknown) as CLIOptions & {'exit-code-when-changed': number, 'exit-code-when-unchanged': number};
 
   try {
-    const {files} = await diff(getAPIOptionsFromCLIOptions(argv));
+    const { files } = await diff(getAPIOptionsFromCLIOptions(argv));
     if (Object.keys(files).length) {
       debug.log(`exiting with 128`);
-      process.exitCode = 128;
+      process.exitCode = argv["exit-code-when-changed"];
     } else {
       debug.log(`exiting with 0`);
-      process.exitCode = 0;
+      process.exitCode = argv["exit-code-when-unchanged"];
     }
   } catch (error) {
     debug.log(`exiting with 1`);

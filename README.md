@@ -22,8 +22,8 @@ yarn add --dev run-if-diff
 Exit with an exit code of `128` if matching files have changed, Exit with an exit code of `0` if no matching files have changed.
 
 ```bash
-exit-if-diff [--since <ref>] [--file-path <glob>] [--file-status 
-<status>]
+exit-if-diff [--since <ref>] [--file-path <glob>] [--file-status
+<status>] [--exit-code-when-changed 128] [--exit-code-when-unchanged 0]
 ```
 
 Example:
@@ -83,7 +83,7 @@ A status to filter the results by.
 
 Use uppercase letters to include the status from the results. e.g. `A`, `M`
 
-Use lowercase letters to include the status from the results. e.g. `a`, `m` 
+Use lowercase letters to include the status from the results. e.g. `a`, `m`
 
 If you specify multiple `--file-status` options, files matching _any_ of the options are returned.
 

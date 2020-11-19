@@ -30,7 +30,10 @@ describe("exit-if-diff", () => {
 
   test("exits with 128 when files matching the specified path are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await exitIfDiff(["--file-path", "**/*.js"]);
+    const { code, stdout, stderr } = await exitIfDiff([
+      "--file-path",
+      "**/*.js",
+    ]);
     expect(code).toEqual(128);
     expect(stderr).toEqual("");
     expect(stdout).toEqual("");
@@ -38,10 +41,7 @@ describe("exit-if-diff", () => {
 
   test("exits with 128 when files matching the specified status are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await exitIfDiff([
-      "--file-status",
-      "M"
-    ]);
+    const { code, stdout, stderr } = await exitIfDiff(["--file-status", "M"]);
     expect(code).toEqual(128);
     expect(stderr).toEqual("");
     expect(stdout).toEqual("");
@@ -49,13 +49,9 @@ describe("exit-if-diff", () => {
 
   test("exits with 128 when files not matching the specified status are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await exitIfDiff([
-      "--file-status",
-      "d"
-    ]);
+    const { code, stdout, stderr } = await exitIfDiff(["--file-status", "d"]);
     expect(code).toEqual(128);
     expect(stderr).toEqual("");
     expect(stdout).toEqual("");
   });
-  
 });

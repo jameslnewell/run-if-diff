@@ -33,7 +33,10 @@ describe("list-if-diff", () => {
 
   test("lists files when files matching the specified path are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await listIfDiff(["--file-path", "**/*.js"]);
+    const { code, stdout, stderr } = await listIfDiff([
+      "--file-path",
+      "**/*.js",
+    ]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
     expect(stdout).not.toMatch("README.md");
@@ -44,10 +47,7 @@ describe("list-if-diff", () => {
 
   test("lists files when files matching the specified status are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await listIfDiff([
-      "--file-status",
-      "M"
-    ]);
+    const { code, stdout, stderr } = await listIfDiff(["--file-status", "M"]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
     expect(stdout).not.toMatch("README.md");
@@ -58,10 +58,7 @@ describe("list-if-diff", () => {
 
   test("lists files when files not matching the specified status are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await listIfDiff([
-      "--file-status",
-      "d"
-    ]);
+    const { code, stdout, stderr } = await listIfDiff(["--file-status", "d"]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
     expect(stdout).toMatch("README.md");
@@ -69,5 +66,4 @@ describe("list-if-diff", () => {
     expect(stdout).toMatch("src/index.js");
     expect(stdout).not.toMatch("src/index.test.js");
   });
-
 });

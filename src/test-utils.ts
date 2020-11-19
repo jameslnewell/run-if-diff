@@ -28,7 +28,7 @@ export async function cli(command: string, args: string[]): Promise<CLIResult> {
 
 export function getDirectory(): string {
   if (!tmpdir) {
-    throw new Error('Call createDirectory() before calling getDirectory()');
+    throw new Error("Call createDirectory() before calling getDirectory()");
   }
   return tmpdir;
 }
@@ -66,9 +66,8 @@ async function createSampleFiles(): Promise<void> {
   );
 }
 
-
 async function updateSampleFiles(): Promise<void> {
-  await fs.writeFile(`${tmpdir}/README.md`, '# Sample');
+  await fs.writeFile(`${tmpdir}/README.md`, "# Sample");
   await fs.writeFile(`${tmpdir}/package.json`, '{"name": "barfoo"}');
   await fs.writeFile(`${tmpdir}/src/index.js`, 'console.log("hello world!");');
   await fs.unlink(`${tmpdir}/src/index.test.js`);

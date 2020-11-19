@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 /* tslint:disable: no-console no-var-requires */
-import { spawn } from "child_process"
+import { spawn } from "child_process";
 import yargs from "yargs";
 import { diff } from "../api";
-import { CLIOptions, options, getAPIOptionsFromCLIOptions } from "./utils/options";
+import {
+  CLIOptions,
+  options,
+  getAPIOptionsFromCLIOptions,
+} from "./utils/options";
 import * as debug from "./utils/debug";
 
 class PassThroughError extends Error {
@@ -50,7 +54,7 @@ function passthru(
   }
 
   try {
-    const {files} = await diff(getAPIOptionsFromCLIOptions(argv));
+    const { files } = await diff(getAPIOptionsFromCLIOptions(argv));
     if (Object.keys(files).length) {
       debug.log(`spawning: ${cmd} ${args.join(" ")}`);
       await passthru(cmd, args);

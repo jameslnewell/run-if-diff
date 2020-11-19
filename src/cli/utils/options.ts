@@ -4,8 +4,8 @@ import { DiffOptions, DiffStatus } from "../../api";
 export interface CLIOptions {
   _: string[];
   since?: string;
-  'file-path': string | string[];
-  'file-status': string | string[];
+  "file-path": string | string[];
+  "file-status": string | string[];
 }
 
 const since: yargs.Options = {
@@ -27,19 +27,32 @@ const fileStatus: yargs.Options = {
   requiresArg: true,
   type: "string",
   describe: "The status(es) to filter by.",
-  choices: [...Object.values(DiffStatus).map(s => s.toUpperCase()), ...Object.values(DiffStatus).map(s => s.toLowerCase())]
+  choices: [
+    ...Object.values(DiffStatus).map((s) => s.toUpperCase()),
+    ...Object.values(DiffStatus).map((s) => s.toLowerCase()),
+  ],
 };
 
 export const options = {
   since,
-  'file-path': filePath,
-  'file-status': fileStatus,
-}
+  "file-path": filePath,
+  "file-status": fileStatus,
+};
 
-export const getAPIOptionsFromCLIOptions = (options: CLIOptions): DiffOptions => {
+export const getAPIOptionsFromCLIOptions = (
+  options: CLIOptions
+): DiffOptions => {
   return {
     since: options.since,
-    paths: Array.isArray(options['file-path']) ? options['file-path'] : options['file-path'] ? [options['file-path']] : undefined,
-    statuses: Array.isArray(options['file-status']) ? options['file-status'] as unknown as DiffStatus[] : options['file-status'] ? [options['file-status']] as DiffStatus[] : undefined,
+    paths: Array.isArray(options["file-path"])
+      ? options["file-path"]
+      : options["file-path"]
+      ? [options["file-path"]]
+      : undefined,
+    statuses: Array.isArray(options["file-status"])
+      ? ((options["file-status"] as unknown) as DiffStatus[])
+      : options["file-status"]
+      ? ([options["file-status"]] as DiffStatus[])
+      : undefined,
   };
 };

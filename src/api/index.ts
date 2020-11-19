@@ -6,9 +6,9 @@ export const DiffStatus = git.DiffStatus;
 
 export interface DiffOptions {
   cwd?: string;
-  since?: git.DiffOptions['ref'];
-  paths?: git.DiffOptions['paths'];
-  statuses?: git.DiffOptions['statuses'];
+  since?: git.DiffOptions["ref"];
+  paths?: git.DiffOptions["paths"];
+  statuses?: git.DiffOptions["statuses"];
 }
 
 export interface DiffResult {
@@ -19,12 +19,12 @@ export interface DiffResult {
 export async function diff(options: DiffOptions = {}): Promise<DiffResult> {
   const { cwd, since, paths, statuses } = options;
 
-  const ref = since ? since : await git.getDefaultRef({cwd});
+  const ref = since ? since : await git.getDefaultRef({ cwd });
   const files = await git.diff({
     cwd,
-    ref, 
-    paths, 
-    statuses
+    ref,
+    paths,
+    statuses,
   });
 
   log.diff({

@@ -10,15 +10,19 @@ const runIfDiff = (args: string[]): Promise<CLIResult> =>
   cli("run-if-diff", args);
 
 const cmdExitCode = 111;
-const cmdStdOut = 'Hello World!';
-const cmdStdErr = '';
-const cmd = ['--', 'bash', '-c', `echo ${cmdStdOut} && exit ${cmdExitCode}`];
+const cmdStdOut = "Hello World!";
+const cmdStdErr = "";
+const cmd = ["--", "bash", "-c", `echo ${cmdStdOut} && exit ${cmdExitCode}`];
 
-const expectCmdToHaveRun = (code: number, stdout: string, stderr: string): void => {
+const expectCmdToHaveRun = (
+  code: number,
+  stdout: string,
+  stderr: string
+): void => {
   expect(code).toEqual(cmdExitCode);
   expect(stdout).toEqual(`${cmdStdOut}\n`);
   expect(stderr).toEqual(cmdStdErr);
-}
+};
 
 describe("run-if-diff", () => {
   afterEach(async () => await cleanup());
@@ -39,7 +43,11 @@ describe("run-if-diff", () => {
 
   test("runs cmd when files matching the specified path are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await runIfDiff(["--file-path", "**/*.js", ...cmd]);
+    const { code, stdout, stderr } = await runIfDiff([
+      "--file-path",
+      "**/*.js",
+      ...cmd,
+    ]);
     expectCmdToHaveRun(code, stdout, stderr);
   });
 
@@ -48,7 +56,7 @@ describe("run-if-diff", () => {
     const { code, stdout, stderr } = await runIfDiff([
       "--file-status",
       "M",
-      ...cmd
+      ...cmd,
     ]);
     expectCmdToHaveRun(code, stdout, stderr);
   });
@@ -58,9 +66,8 @@ describe("run-if-diff", () => {
     const { code, stdout, stderr } = await runIfDiff([
       "--file-status",
       "d",
-      ...cmd
+      ...cmd,
     ]);
     expectCmdToHaveRun(code, stdout, stderr);
   });
-  
 });
