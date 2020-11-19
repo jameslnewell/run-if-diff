@@ -22,8 +22,12 @@ import { diff } from "../api";
       statuses: fileStatuses as DiffStatusFilter[],
     });
 
+    console.log(`ref=${JSON.stringify(ref)}`);
+    console.log(`files=${JSON.stringify(files)}`);
+
     core.setOutput("ref", ref);
     core.setOutput("files", files);
+    
   } catch (error) {
     core.setFailed(error && error.message);
   }
