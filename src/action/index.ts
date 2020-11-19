@@ -6,6 +6,16 @@ import { diff } from "../api";
   try {
     const cwd = core.getInput("cwd");
     const since = core.getInput("since");
+    console.log(JSON.stringify(core
+      .getInput("file-path")), JSON.stringify(core
+        .getInput("file-path")
+        .split("\n")
+        .filter((p) => !!p)))
+      console.log(JSON.stringify(core
+        .getInput("file-status")), JSON.stringify(core
+          .getInput("file-status")
+          .split("\n")
+          .filter((p) => !!p)))
     const filePaths = core
       .getInput("file-path")
       .split("\n")

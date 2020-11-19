@@ -94,10 +94,10 @@ export async function diff(
   if (options?.ref) {
     args.push(options.ref);
   }
-  if (options?.statuses) {
+  if (options?.statuses?.length) {
     args.push("--diff-filter", options.statuses.join(""));
   }
-  if (options?.paths) {
+  if (options?.paths?.length) {
     args.push(...options.paths);
   }
   const { stdout } = await shell.exec(cmd, args, { cwd: options?.cwd });

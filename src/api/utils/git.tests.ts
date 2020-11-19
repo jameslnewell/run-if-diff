@@ -58,6 +58,37 @@ describe("api", () => {
           "package.json": "M",
         });
       });
+
+      test("works when statuses is an empty array", async () => {
+        await createRepositoryWithDiff();
+        const statuses = await diff({
+          cwd: getDirectory(),
+          ref: "HEAD~1",
+          paths: []
+        });
+        expect(statuses).toEqual({
+          "README.md": "A",
+          "src/index.js": "M",
+          "src/index.test.js": "D",
+          "package.json": "M",
+        });
+      });
+
+      test("works when statuses is an empty array", async () => {
+        await createRepositoryWithDiff();
+        const statuses = await diff({
+          cwd: getDirectory(),
+          ref: "HEAD~1",
+          statuses: []
+        });
+        expect(statuses).toEqual({
+          "README.md": "A",
+          "src/index.js": "M",
+          "src/index.test.js": "D",
+          "package.json": "M",
+        });
+      });
+
     });
   });
 });
