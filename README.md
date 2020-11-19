@@ -90,14 +90,15 @@ If you specify multiple `--file-status` options, files matching _any_ of the opt
 ### action
 
 ```yml
-uses: jameslnewell/run-if-diff@v1
-with:
-  since: master
-  file-path: |
-    apps/**/*.tsx
-    packages/**/*.tsx
-  file-status: |
-    d
+steps:
+  - uses: actions/checkout@v2
+  - uses: jameslnewell/run-if-diff@master
+    with:
+      file-path: |
+        apps/**/*.tsx
+        packages/**/*.tsx
+      file-status: |
+        d
 ```
 
 #### cwd

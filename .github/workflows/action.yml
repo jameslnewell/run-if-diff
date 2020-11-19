@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v2
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
+        with:
+          ref: HEAD~1
       - name: Get the ref
         run: echo "ref=${{ steps.run-if-diff.outputs.ref }}"
       - name: Get the files
