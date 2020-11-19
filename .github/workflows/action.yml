@@ -31,5 +31,5 @@ jobs:
         run: 'echo -e "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
 
       - name: Conditionally run commands
-        if: ${{ steps.run-if-diff.outputs.count >= 0 }}
+        if: ${{ steps.run-if-diff.outputs.count > 0 }}
         run: echo "expensive operation..."
