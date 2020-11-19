@@ -15,11 +15,12 @@ jobs:
         uses: jameslnewell/run-if-diff@master
         with:
           since: first-tag
+          file-paths: "**/*.ts"
       - name: Get the ref
         run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'
       - name: Get the file count
         run: 'echo "count: ${{ steps.run-if-diff.outputs.count }}"'
       - name: Get the file paths
-        run: 'echo "paths: ${{ steps.run-if-diff.outputs.paths }}"'
+        run: 'echo "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
       - if: ${{ steps.run-if-diff.outputs.count >= 0 }}
-        run: echo "expensive operation"
+        run: echo "expensive operation..."
