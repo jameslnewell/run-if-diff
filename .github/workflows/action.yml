@@ -21,6 +21,6 @@ jobs:
       - name: Get the file count
         run: 'echo "count: ${{ steps.run-if-diff.outputs.count }}"'
       - name: Get the file paths
-        run: 'echo "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
+        run: 'echo -e "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
       - if: ${{ steps.run-if-diff.outputs.count >= 0 }}
         run: echo "expensive operation..."
