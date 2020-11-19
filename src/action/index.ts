@@ -22,12 +22,15 @@ import { diff } from "../api";
       statuses: fileStatuses as DiffStatusFilter[],
     });
 
-    console.log(`ref=${JSON.stringify(ref)}`);
-    console.log(`files=${JSON.stringify(files)}`);
+    console.log(`ref: ${ref}`);
+    console.log("files:");
+    Object.entries(files).forEach(([path, status]) => {
+      console.log(` - ${status}\t${path}`);
+    });
 
     core.setOutput("ref", ref);
-    core.setOutput("files", files);
-    
+    core.setOutput("count", Object.keys(files).length);
+    core.setOutput("paths", Object.keys(files).join("\n"));
   } catch (error) {
     core.setFailed(error && error.message);
   }

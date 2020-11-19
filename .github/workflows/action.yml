@@ -16,6 +16,10 @@ jobs:
         with:
           since: first-tag
       - name: Get the ref
-        run: echo "ref=${{ steps.run-if-diff.outputs.ref }}"
-      - name: Get the files
-        run: echo "files=${{ steps.run-if-diff.outputs.files }}"
+        run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'
+      - name: Get the file count
+        run: 'echo "count: ${{ steps.run-if-diff.outputs.count }}"'
+      - name: Get the file paths
+        run: 'echo "paths: ${{ steps.run-if-diff.outputs.paths }}"'
+      - if: ${{ steps.run-if-diff.outputs.count >= 0 }}
+        run: echo "expensive operation"
