@@ -1,0 +1,17 @@
+name: Action
+
+on:
+  push:
+    branches: master
+  pull_request:
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - id: run-if-diff
+        uses: jameslnewell/run-if-diff@v1
+      - name: Get the ref
+        run: echo "ref=${{ steps.run-if-diff.outputs.ref }}"
+      - name: Get the files
+        run: echo "files=${{ steps.run-if-diff.outputs.files }}"

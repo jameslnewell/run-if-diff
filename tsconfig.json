@@ -4,5 +4,5 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "src": ["src"]
+  "include": ["src"]
 }

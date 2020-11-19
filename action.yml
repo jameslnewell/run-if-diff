@@ -1,0 +1,22 @@
+name: run-if-diff
+description: Run a command if files are different
+inputs:
+  cwd:
+    description: The git directory
+    required: false
+    default: .
+  since:
+    description: A git ref to compare the current working directory to
+    required: false
+  file-path:
+    description: The file paths (or glob) to filter the files by
+    required: false
+  file-status:
+    description: The file statuses to filter the files by
+    required: false
+outputs:
+  files:
+    description: The matching files which have changed
+runs:
+  using: "node12"
+  main: "lib/action/index.js"

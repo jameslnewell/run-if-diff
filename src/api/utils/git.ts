@@ -80,8 +80,11 @@ export interface DiffOptions {
   statuses?: Array<DiffStatusFilter>;
 }
 
-const isStatus = (status: string): status is DiffStatus =>
-  Object.values(DiffStatus).includes(status as DiffStatus);
+const isStatus = (status: string): status is DiffStatusFilter =>
+  Object.values(DiffStatus).includes(status as any) ||
+  Object.values(DiffStatus)
+    .map((s) => s.toLowerCase())
+    .includes(status as any);
 
 export async function diff(
   options?: DiffOptions

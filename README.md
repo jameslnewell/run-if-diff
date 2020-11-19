@@ -1,9 +1,9 @@
 # run-if-diff
 
 [![run-if-diff](https://img.shields.io/npm/v/run-if-diff.svg)](https://www.npmjs.com/package/run-if-diff)
-![run-if-diff](https://github.com/jameslnewell/run-if-diff/workflows/CI/badge.svg)
+![run-if-diff](https://github.com/jameslnewell/run-if-diff/workflows/Package/badge.svg)
 
-Run a command if files are different (plus a few other related utilities).
+Run a command if files are different.
 
 ## Installation
 
@@ -79,13 +79,34 @@ If you specify multiple `--file-path` options, files matching _any_ of the optio
 
 #### `--file-status`
 
-A status to filter the results by.
+A file status to filter the files by.
 
-Use uppercase letters to include the status from the results. e.g. `A`, `M`
+Use uppercase letters to include the status from the results. e.g. `A`, `B`, `D`, `M`, `R`, `T`, `U`, `X`
 
-Use lowercase letters to include the status from the results. e.g. `a`, `m`
+Use lowercase letters to include the status from the results. e.g. `a`, `b`, `d`, `m`, `r`, `t`, `u`, `x`
 
 If you specify multiple `--file-status` options, files matching _any_ of the options are returned.
+
+### action
+
+```yml
+uses: jameslnewell/run-if-diff@v1
+with:
+  since: master
+  file-path: |
+    apps/**/*.tsx
+    packages/**/*.tsx
+  file-status: |
+    d
+```
+
+#### cwd
+
+#### since
+
+#### file-path
+
+#### file-status
 
 ## Credits
 
