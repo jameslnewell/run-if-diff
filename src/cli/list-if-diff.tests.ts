@@ -12,7 +12,7 @@ const listIfDiff = (args: string[]): Promise<CLIResult> =>
 describe("list-if-diff", () => {
   afterEach(async () => await cleanup());
 
-  test("no files are listed when no files have changed", async () => {
+  test("does not list files when no files are not different", async () => {
     await createRepositoryWithoutDiff();
     const { code, stdout, stderr } = await listIfDiff([]);
     expect(code).toEqual(0);
@@ -20,45 +20,54 @@ describe("list-if-diff", () => {
     expect(stdout).toEqual("");
   });
 
-  test("files are listed when files have changed", async () => {
+  test("lists files when files are different", async () => {
     await createRepositoryWithDiff();
     const { code, stdout, stderr } = await listIfDiff([]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("index.js");
-    expect(stdout).toMatch("index.test.js");
+    expect(stdout).toMatch("README.md");
+    expect(stdout).toMatch("src/index.js");
+    expect(stdout).toMatch("src/index.test.js");
     expect(stdout).toMatch("package.json");
   });
 
-  test("no files are listed when no files matching the glob have changed", async () => {
-    await createRepositoryWithoutDiff();
-    const { code, stdout, stderr } = await listIfDiff(["--file", "**/*.js"]);
-    expect(code).toEqual(0);
-    expect(stderr).toEqual("");
-    expect(stdout).toEqual("");
-  });
-
-  test("files are listed when files matching the glob have changed", async () => {
+  test("lists files when files matching the specified path are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await listIfDiff(["--file", "**/*.js"]);
+    const { code, stdout, stderr } = await listIfDiff(["--file-path", "**/*.js"]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("index.js");
-    expect(stdout).toMatch("index.test.js");
+    expect(stdout).not.toMatch("README.md");
+    expect(stdout).toMatch("src/index.js");
+    expect(stdout).toMatch("src/index.test.js");
     expect(stdout).not.toMatch("package.json");
   });
 
-  test("files are not listed when they have been deleted", async () => {
+  test("lists files when files matching the specified status are different", async () => {
     await createRepositoryWithDiff();
     const { code, stdout, stderr } = await listIfDiff([
-      "--file",
-      "**/*.js",
-      "--ignoreDeleted",
+      "--file-status",
+      "M"
     ]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("index.js");
-    expect(stdout).not.toMatch("index.test.js");
-    expect(stdout).not.toMatch("package.json");
+    expect(stdout).not.toMatch("README.md");
+    expect(stdout).toMatch("package.json");
+    expect(stdout).toMatch("src/index.js");
+    expect(stdout).not.toMatch("src/index.test.js");
   });
+
+  test("lists files when files not matching the specified status are different", async () => {
+    await createRepositoryWithDiff();
+    const { code, stdout, stderr } = await listIfDiff([
+      "--file-status",
+      "d"
+    ]);
+    expect(code).toEqual(0);
+    expect(stderr).toEqual("");
+    expect(stdout).toMatch("README.md");
+    expect(stdout).toMatch("package.json");
+    expect(stdout).toMatch("src/index.js");
+    expect(stdout).not.toMatch("src/index.test.js");
+  });
+
 });

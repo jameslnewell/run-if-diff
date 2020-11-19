@@ -1,42 +1,24 @@
 #!/usr/bin/env node
 /* tslint:disable: no-console */
 
-import fs from "fs";
-import debug from "debug";
 import yargs from "yargs";
 import { diff } from "../api";
-import { Options, since, file, ignoreDeleted } from "./utils/options";
-
-const log = debug("list-if-diff");
+import { CLIOptions, options, getAPIOptionsFromCLIOptions } from "./utils/options";
+import * as debug from "./utils/debug";
 
 (async () => {
   const argv = (yargs
     .strict()
     .help()
-    .usage("$0", "list files which have changed", {
-      since,
-      file,
-      ignoreDeleted,
-    }).argv as unknown) as Options;
+    .usage("$0", "list files which have changed", options).argv as unknown) as CLIOptions;
 
   try {
-    const result = await diff({
-      since: argv.since,
-      files: Array.isArray(argv.file) ? argv.file : [argv.file],
-    });
-    result.matched
-      .filter((file) => {
-        if (argv.ignoreDeleted) {
-          return fs.existsSync(file);
-        } else {
-          return true;
-        }
-      })
-      .forEach((file) => console.log(file));
-    log(`exit code: 0`);
+    const {files} = await diff(getAPIOptionsFromCLIOptions(argv));
+    Object.keys(files).forEach((file) => console.log(file));
+    debug.log(`exiting with 0`);
     process.exitCode = 0;
   } catch (error) {
-    log(`exit code: 1`);
+    debug.log(`exiting with 1`);
     console.error(error);
     process.exitCode = 1;
   }

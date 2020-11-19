@@ -12,35 +12,50 @@ const exitIfDiff = (args: string[]): Promise<CLIResult> =>
 describe("exit-if-diff", () => {
   afterEach(async () => await cleanup());
 
-  test("exit code is 0 when files have not changed", async () => {
+  test("exits with 0 when files are not different", async () => {
     await createRepositoryWithoutDiff();
     const { code, stdout, stderr } = await exitIfDiff([]);
     expect(code).toEqual(0);
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("");
+    expect(stdout).toEqual("");
   });
 
-  test("exit code is 128 when files have changed", async () => {
+  test("exits with 128 when files are different", async () => {
     await createRepositoryWithDiff();
     const { code, stdout, stderr } = await exitIfDiff([]);
     expect(code).toEqual(128);
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("");
+    expect(stdout).toEqual("");
   });
 
-  test("exit code is 0 when files matching the glob have not changed", async () => {
-    await createRepositoryWithoutDiff();
-    const { code, stdout, stderr } = await exitIfDiff(["--file", "*.js"]);
-    expect(code).toEqual(0);
-    expect(stderr).toEqual("");
-    expect(stdout).toMatch("");
-  });
-
-  test("exit code is 128 when files matching the glob have changed", async () => {
+  test("exits with 128 when files matching the specified path are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await exitIfDiff(["--file", "*.js"]);
+    const { code, stdout, stderr } = await exitIfDiff(["--file-path", "**/*.js"]);
     expect(code).toEqual(128);
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("");
+    expect(stdout).toEqual("");
   });
+
+  test("exits with 128 when files matching the specified status are different", async () => {
+    await createRepositoryWithDiff();
+    const { code, stdout, stderr } = await exitIfDiff([
+      "--file-status",
+      "M"
+    ]);
+    expect(code).toEqual(128);
+    expect(stderr).toEqual("");
+    expect(stdout).toEqual("");
+  });
+
+  test("exits with 128 when files not matching the specified status are different", async () => {
+    await createRepositoryWithDiff();
+    const { code, stdout, stderr } = await exitIfDiff([
+      "--file-status",
+      "d"
+    ]);
+    expect(code).toEqual(128);
+    expect(stderr).toEqual("");
+    expect(stdout).toEqual("");
+  });
+  
 });

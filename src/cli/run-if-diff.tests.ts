@@ -9,45 +9,58 @@ import {
 const runIfDiff = (args: string[]): Promise<CLIResult> =>
   cli("run-if-diff", args);
 
+const cmdExitCode = 111;
+const cmdStdOut = 'Hello World!';
+const cmdStdErr = '';
+const cmd = ['--', 'bash', '-c', `echo ${cmdStdOut} && exit ${cmdExitCode}`];
+
+const expectCmdToHaveRun = (code: number, stdout: string, stderr: string): void => {
+  expect(code).toEqual(cmdExitCode);
+  expect(stdout).toEqual(`${cmdStdOut}\n`);
+  expect(stderr).toEqual(cmdStdErr);
+}
+
 describe("run-if-diff", () => {
   afterEach(async () => await cleanup());
 
-  test("should exit successfully before running the command when the files have not changed", async () => {
+  test("does not run cmd when files are not different", async () => {
     await createRepositoryWithoutDiff();
-    const { code, stdout, stderr } = await runIfDiff(["--", "ls", "-la"]);
+    const { code, stdout, stderr } = await runIfDiff([...cmd]);
     expect(code).toEqual(0);
+    expect(stdout).toEqual("");
     expect(stderr).toEqual("");
-    expect(stdout).toMatch("");
   });
 
-  test("should exit successfully after running the command when the files have changed and the command exits successfully", async () => {
+  test("runs cmd when files are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await runIfDiff(["--", "ls"]);
-    expect(code).toEqual(0);
-    expect(stderr).toEqual("");
-    expect(stdout).toMatch("package.json");
+    const { code, stdout, stderr } = await runIfDiff([...cmd]);
+    expectCmdToHaveRun(code, stdout, stderr);
   });
 
-  test("should exit with an error after running the command when the files have changed and the command exits with an error", async () => {
+  test("runs cmd when files matching the specified path are different", async () => {
+    await createRepositoryWithDiff();
+    const { code, stdout, stderr } = await runIfDiff(["--file-path", "**/*.js", ...cmd]);
+    expectCmdToHaveRun(code, stdout, stderr);
+  });
+
+  test("runs cmd when files matching the specified status are different", async () => {
     await createRepositoryWithDiff();
     const { code, stdout, stderr } = await runIfDiff([
-      "--",
-      "ls",
-      "non-existent-directory",
+      "--file-status",
+      "M",
+      ...cmd
     ]);
-    expect(code).toEqual(1);
-    expect(stdout).toEqual("");
-    expect(stderr).toMatch("No such file or directory");
+    expectCmdToHaveRun(code, stdout, stderr);
   });
 
-  test("should exit successfully after running the command when the files have changed and the command exits successfully", async () => {
+  test("runs cmd when files matching the specified status are different", async () => {
     await createRepositoryWithDiff();
-    const { code, stdout, stderr } = await runIfDiff(["--", "ls"]);
-    expect(code).toEqual(0);
-    expect(stderr).toEqual("");
-    expect(stdout).toMatch("package.json");
+    const { code, stdout, stderr } = await runIfDiff([
+      "--file-status",
+      "d",
+      ...cmd
+    ]);
+    expectCmdToHaveRun(code, stdout, stderr);
   });
-
-  // TODO: test --since
-  // TODO: test --file
+  
 });

@@ -1,30 +1,45 @@
 import yargs from "yargs";
+import { DiffOptions, DiffStatus } from "../../api";
 
-export interface Options {
+export interface CLIOptions {
   _: string[];
-  file: string | string[];
   since?: string;
-  ignoreDeleted?: boolean;
+  'file-path': string | string[];
+  'file-status': string | string[];
 }
 
-export const since: yargs.Options = {
-  alias: "s",
+const since: yargs.Options = {
   default: undefined,
   requiresArg: true,
   type: "string",
-  describe: "The git ref to diff the current working directory with.",
+  describe: "The git ref the diff will be run against.",
 };
 
-export const file: yargs.Options = {
-  alias: "f",
-  default: ["**"],
+const filePath: yargs.Options = {
+  default: [],
   requiresArg: true,
   type: "string",
-  describe: "The file(s) to diff",
+  describe: "The path(s) to filter by.",
 };
 
-export const ignoreDeleted: yargs.Options = {
-  default: false,
-  type: "boolean",
-  describe: "Whether to ignore files which have been deleted",
+const fileStatus: yargs.Options = {
+  default: [],
+  requiresArg: true,
+  type: "string",
+  describe: "The status(es) to filter by.",
+  choices: [...Object.values(DiffStatus).map(s => s.toUpperCase()), ...Object.values(DiffStatus).map(s => s.toLowerCase())]
+};
+
+export const options = {
+  since,
+  'file-path': filePath,
+  'file-status': fileStatus,
+}
+
+export const getAPIOptionsFromCLIOptions = (options: CLIOptions): DiffOptions => {
+  return {
+    since: options.since,
+    paths: Array.isArray(options['file-path']) ? options['file-path'] : options['file-path'] ? [options['file-path']] : undefined,
+    statuses: Array.isArray(options['file-status']) ? options['file-status'] as unknown as DiffStatus[] : options['file-status'] ? [options['file-status']] as DiffStatus[] : undefined,
+  };
 };

@@ -7,92 +7,85 @@ Run a command if files are different (plus a few other related utilities).
 
 ## Installation
 
-```
-yarn add run-if-diff
+```bash
+# npm
+npm i -S run-if-diff
+
+# yarn
+yarn add --dev run-if-diff
 ```
 
 ## Usage
 
-### `run-if-diff`
-
-Run a command if files have changed.
-
-```
-run-if-diff [--since <ref>] [--file <glob>] -- <cmd>
-```
-
-Example:
-
-```bash
-run-if-diff --since v1.3.1 --file my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
-```
-
-#### Options
-
-##### `--since`
-
-The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
-
-##### `--file`
-
-A file or a glob that must be different for the command to be run.
-
-If you specify multiple `--file` options, the command will run if _any_ of the `--file` options are matched.
-
 ### `exit-if-diff`
 
-Exit with code `128` if files have changed and with code `0` otherwise.
+Exit with an exit code of `128` if matching files have changed, Exit with an exit code of `0` if no matching files have changed.
 
-```
-exit-if-diff [--since <ref>] [--file <glob>]
+```bash
+exit-if-diff [--since <ref>] [--file-path <glob>] [--file-status 
+<status>]
 ```
 
 Example:
 
 ```bash
-exit-if-diff --since v1.3.1 --file my-app.yml
+set +e
+exit-if-diff --since v1.3.1 --file-path my-app.yml
+set -e
 if [ $? -eq 128 ]
   aws cfn deploy --stack-name my-app --template-file my-app.yml
 fi
 ```
 
-#### Options
-
-##### `--since`
-
-The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
-
-##### `--file`
-
-A file or a glob that must be different for the command to exit.
-
-If you specify multiple `--file` options, the command will exit if _any_ of the `--file` options are matched.
-
 ### `list-if-diff`
 
-List files that have changed.
+List matching files that have changed.
 
-```
-list-if-diff [--since <ref>] [--file <glob>]
+```bash
+list-if-diff [--since <ref>] [--file-path <glob>] [--file-status <status>]
 ```
 
 Example:
 
 ```bash
-list-if-diff --since v1.3.1 --file my-app.yml
+list-if-diff --since v1.3.1 --file-path my-app.yml | xargs eslint
 ```
 
-#### Options
+### `run-if-diff`
 
-##### `--since`
+Run a command and passthru it's output if matching files have changed.
 
-The git ref to compare files in the current working directory to. Defaults to the most recent tag or the initial commit.
+```bash
+run-if-diff [--since <ref>] [--file-path <glob>] [--file-status <status>] -- <cmd>
+```
 
-##### `--file`
+Example:
 
-A file or a glob that must be different for the command to list the files.
+```bash
+run-if-diff --since v1.3.1 --file-path my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
+```
 
-If you specify multiple `--file` options, the command will list if _any_ of the `--file` options are matched.
+### Common Options
+
+#### `--since`
+
+A git ref to compare the current working directory to. Defaults to the most recent tag or the initial commit.
+
+#### `--file-path`
+
+A file path (or glob) to filter the files by.
+
+If you specify multiple `--file-path` options, files matching _any_ of the options are returned.
+
+#### `--file-status`
+
+A status to filter the results by.
+
+Use uppercase letters to include the status from the results. e.g. `A`, `M`
+
+Use lowercase letters to include the status from the results. e.g. `a`, `m` 
+
+If you specify multiple `--file-status` options, files matching _any_ of the options are returned.
 
 ## Credits
 

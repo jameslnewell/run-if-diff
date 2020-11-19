@@ -26,6 +26,13 @@ export async function cli(command: string, args: string[]): Promise<CLIResult> {
   }
 }
 
+export function getDirectory(): string {
+  if (!tmpdir) {
+    throw new Error('Call createDirectory() before calling getDirectory()');
+  }
+  return tmpdir;
+}
+
 async function git(args: string[]): Promise<void> {
   await shell.exec("git", args, { cwd: tmpdir });
 }
@@ -41,6 +48,10 @@ async function gitCommit(): Promise<void> {
   await git(["commit", "-am", "sample commit"]);
 }
 
+async function gitTag(): Promise<void> {
+  await git(["tag", "foobar"]);
+}
+
 async function createDirectory(): Promise<void> {
   tmpdir = await fs.mkdtemp(`${os.tmpdir()}/run-if-diff`);
 }
@@ -48,17 +59,19 @@ async function createDirectory(): Promise<void> {
 async function createSampleFiles(): Promise<void> {
   await fs.writeFile(`${tmpdir}/package.json`, '{"name": "foobar"}');
   await fs.mkdirs(`${tmpdir}/src`);
-  await fs.writeFile(`${tmpdir}/index.js`, 'console.log("Hello World!");');
+  await fs.writeFile(`${tmpdir}/src/index.js`, 'console.log("Hello World!");');
   await fs.writeFile(
-    `${tmpdir}/index.test.js`,
+    `${tmpdir}/src/index.test.js`,
     'test("logs message", () => {})'
   );
 }
 
+
 async function updateSampleFiles(): Promise<void> {
+  await fs.writeFile(`${tmpdir}/README.md`, '# Sample');
   await fs.writeFile(`${tmpdir}/package.json`, '{"name": "barfoo"}');
-  await fs.writeFile(`${tmpdir}/index.js`, 'console.log("hello world!");');
-  await fs.unlink(`${tmpdir}/index.test.js`);
+  await fs.writeFile(`${tmpdir}/src/index.js`, 'console.log("hello world!");');
+  await fs.unlink(`${tmpdir}/src/index.test.js`);
 }
 
 export async function createRepositoryWithoutDiff(): Promise<void> {
@@ -75,7 +88,10 @@ export async function createRepositoryWithDiff(): Promise<void> {
   await createSampleFiles();
   await gitAdd();
   await gitCommit();
+  await gitTag();
   await updateSampleFiles();
+  await gitAdd();
+  await gitCommit();
 }
 
 export async function cleanup(): Promise<void> {
