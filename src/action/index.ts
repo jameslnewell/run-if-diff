@@ -23,7 +23,7 @@ import { diff } from "../api";
     });
 
     console.log(`ref: ${ref}`);
-    console.log(`count: ${Object.keys(files).length}`)
+    console.log(`count: ${Object.keys(files).length}`);
     console.log("files:");
     Object.entries(files).forEach(([path, status]) => {
       console.log(` - ${status}\t${path}`);
