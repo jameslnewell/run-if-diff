@@ -20,10 +20,32 @@ describe("exit-if-diff", () => {
     expect(stdout).toEqual("");
   });
 
+  test("exits with custom code when files are not different", async () => {
+    await createRepositoryWithoutDiff();
+    const { code, stdout, stderr } = await exitIfDiff([
+      "--exit-code-when-unchanged",
+      "123",
+    ]);
+    expect(code).toEqual(123);
+    expect(stderr).toEqual("");
+    expect(stdout).toEqual("");
+  });
+
   test("exits with 128 when files are different", async () => {
     await createRepositoryWithDiff();
     const { code, stdout, stderr } = await exitIfDiff([]);
     expect(code).toEqual(128);
+    expect(stderr).toEqual("");
+    expect(stdout).toEqual("");
+  });
+
+  test("exits with custom code when files are different", async () => {
+    await createRepositoryWithDiff();
+    const { code, stdout, stderr } = await exitIfDiff([
+      "--exit-code-when-changed",
+      "321",
+    ]);
+    expect(code).toEqual(65);
     expect(stderr).toEqual("");
     expect(stdout).toEqual("");
   });

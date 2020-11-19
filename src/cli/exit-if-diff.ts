@@ -16,20 +16,22 @@ import * as debug from "./utils/debug";
     .help()
     .usage("$0", "exit if files have changed", {
       ...options,
-      'exit-code-when-changed': {
+      "exit-code-when-changed": {
         default: 128,
         requiresArg: true,
         type: "number",
         describe: "The exit code when matching files have changed.",
       },
-      'exit-code-when-unchanged': {
+      "exit-code-when-unchanged": {
         default: 0,
         requiresArg: true,
         type: "number",
         describe: "The exit code when no matching files have changed.",
       },
-    })
-    .argv as unknown) as CLIOptions & {'exit-code-when-changed': number, 'exit-code-when-unchanged': number};
+    }).argv as unknown) as CLIOptions & {
+    "exit-code-when-changed": number;
+    "exit-code-when-unchanged": number;
+  };
 
   try {
     const { files } = await diff(getAPIOptionsFromCLIOptions(argv));
