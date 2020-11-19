@@ -13,13 +13,6 @@ jobs:
 
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
-        with:
-          file-path: |
-            apps/**/*.tsx
-            packages/**/*.tsx
-          file-status: |
-            A
-            M
 
       - name: Get the ref
         run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'
@@ -30,6 +23,6 @@ jobs:
       - name: Get the file paths
         run: 'echo -e "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
 
-      - name: Conditionally run commands
+      - name: Conditional command
         if: ${{ steps.run-if-diff.outputs.count > 0 }}
-        run: echo "expensive operation..."
+        run: echo "Expensive command..."

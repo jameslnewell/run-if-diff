@@ -93,7 +93,8 @@ If you specify multiple `--file-status` options, files matching _any_ of the opt
 steps:
   - uses: actions/checkout@v2
 
-  - uses: jameslnewell/run-if-diff@master
+  - id: run-if-diff
+    uses: jameslnewell/run-if-diff@master
     with:
       file-path: |
         apps/**/*.tsx
@@ -111,9 +112,9 @@ steps:
   - name: Get the file paths
     run: 'echo -e "paths: \n${{ steps.run-if-diff.outputs.paths }}"'
 
-  - name: Conditionally run commands
-    if: ${{ steps.run-if-diff.outputs.count >= 0 }}
-    run: echo "expensive operation..."
+  - name: Conditional command
+    if: ${{ steps.run-if-diff.outputs.count > 0 }}
+    run: echo "Expensive command..."
 ```
 
 #### cwd
