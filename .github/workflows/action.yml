@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git fetch --depth=1 origin first-tag
+      - run: git fetch --depth 1 origin refs/tags/first-tag:refs/tags/first-tag
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
         with:
