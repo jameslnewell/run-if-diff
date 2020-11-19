@@ -91,7 +91,6 @@ If you specify multiple `--file-status` options, files matching _any_ of the opt
 
 ```yml
 steps:
-
   - uses: actions/checkout@v2
 
   - uses: jameslnewell/run-if-diff@master
@@ -102,7 +101,7 @@ steps:
       file-status: |
         A
         M
-    
+
   - name: Get the ref
     run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'
 
@@ -115,7 +114,6 @@ steps:
   - name: Conditionally run commands
     if: ${{ steps.run-if-diff.outputs.count >= 0 }}
     run: echo "expensive operation..."
-
 ```
 
 #### cwd
