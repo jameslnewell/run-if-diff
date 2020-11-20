@@ -26,5 +26,5 @@ import * as debug from "./utils/debug";
     debug.log(`exiting with 1`);
     console.error(error);
     process.exitCode = 1;
-  } 
+  }
 })();

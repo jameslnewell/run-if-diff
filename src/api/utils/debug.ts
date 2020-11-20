@@ -6,7 +6,7 @@ export const log = debug("run-if-diff");
 export function diff({ ref, count, paths, statuses }: DiffResult): void {
   log(`ref: ${ref}`);
   log(`count: ${count}`);
-  log(`paths: \n${paths.join('\n')}`);
+  log(`paths: \n${paths.join("\n")}`);
   log(
     `statuses: \n\t ${Object.keys(statuses)
       .sort()

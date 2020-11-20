@@ -14,7 +14,7 @@ jobs:
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
         with:
-          ref: first-tag
+          since: first-tag
 
       - name: Get the ref
         run: 'echo "ref: ${{ steps.run-if-diff.outputs.ref }}"'

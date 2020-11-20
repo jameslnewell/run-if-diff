@@ -33,7 +33,7 @@ export async function diff(options: DiffOptions = {}): Promise<DiffResult> {
     ref,
     count: Object.keys(statusesByFile).length,
     paths: Object.keys(statusesByFile),
-    statuses: statusesByFile
+    statuses: statusesByFile,
   };
   log.diff(result);
   return result;
