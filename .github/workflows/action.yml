@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git fetch --depth 1 origin refs/tags/first-tag:refs/tags/first-tag
+      - run: git fetch --depth 1 origin refs/tags/previous:refs/tags/previous
 
       - id: run-if-diff
         uses: jameslnewell/run-if-diff@master
@@ -29,3 +29,9 @@ jobs:
       - name: Conditional command
         if: ${{ steps.run-if-diff.outputs.count > 0 }}
         run: echo "Expensive command..."
+
+      - run: |
+          git config --global user.name 'James Newell'
+          git config --global user.email 'jameslnewell@users.noreply.github.com'
+          git tag -f previous
+          git push --tags
