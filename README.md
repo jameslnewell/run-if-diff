@@ -23,7 +23,7 @@ Exit with an exit code of `128` if matching files have changed, Exit with an exi
 
 ```bash
 exit-if-diff [--since <ref>] [--file-path <glob>] [--file-status
-<status>] [--exit-code-when-changed 128] [--exit-code-when-unchanged 0]
+<status>] [--exit-code-when-changed <number>] [--exit-code-when-unchanged <number>]
 ```
 
 Example:
@@ -65,29 +65,9 @@ Example:
 run-if-diff --since v1.3.1 --file-path my-app.yml -- aws cfn deploy --stack-name my-app --template-file my-app.yml
 ```
 
-### Common Options
+### Github action
 
-#### `--since`
-
-A git ref to compare the current working directory to. Defaults to the most recent tag or the initial commit.
-
-#### `--file-path`
-
-A file path (or glob) to filter the files by.
-
-If you specify multiple `--file-path` options, files matching _any_ of the options are returned.
-
-#### `--file-status`
-
-A file status to filter the files by.
-
-Use uppercase letters to include the status from the results. e.g. `A`, `B`, `D`, `M`, `R`, `T`, `U`, `X`
-
-Use lowercase letters to include the status from the results. e.g. `a`, `b`, `d`, `m`, `r`, `t`, `u`, `x`
-
-If you specify multiple `--file-status` options, files matching _any_ of the options are returned.
-
-### action
+Check whether files have changed in a pipeline.
 
 ```yml
 steps:
@@ -96,6 +76,8 @@ steps:
   - id: run-if-diff
     uses: jameslnewell/run-if-diff@master
     with:
+      cwd: .
+      since: previous-tag
       file-path: |
         apps/**/*.tsx
         packages/**/*.tsx
@@ -116,14 +98,6 @@ steps:
     if: ${{ steps.run-if-diff.outputs.count > 0 }}
     run: echo "Expensive command..."
 ```
-
-#### cwd
-
-#### since
-
-#### file-path
-
-#### file-status
 
 ## Credits
 

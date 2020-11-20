@@ -13,27 +13,28 @@ export interface DiffOptions {
 
 export interface DiffResult {
   ref: string;
-  files: Record<string, git.DiffStatus>;
+  count: number;
+  paths: string[];
+  statuses: Record<string, git.DiffStatus>;
 }
 
 export async function diff(options: DiffOptions = {}): Promise<DiffResult> {
   const { cwd, since, paths, statuses } = options;
 
   const ref = since ? since : await git.getDefaultRef({ cwd });
-  const files = await git.diff({
+  const statusesByFile = await git.diff({
     cwd,
     ref,
     paths,
     statuses,
   });
 
-  log.diff({
+  const result = {
     ref,
-    files,
-  });
-
-  return {
-    ref,
-    files,
+    count: Object.keys(statusesByFile).length,
+    paths: Object.keys(statusesByFile),
+    statuses: statusesByFile
   };
+  log.diff(result);
+  return result;
 }

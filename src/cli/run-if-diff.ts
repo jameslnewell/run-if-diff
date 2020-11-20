@@ -54,8 +54,8 @@ function passthru(
   }
 
   try {
-    const { files } = await diff(getAPIOptionsFromCLIOptions(argv));
-    if (Object.keys(files).length) {
+    const { count } = await diff(getAPIOptionsFromCLIOptions(argv));
+    if (count > 0) {
       debug.log(`spawning: ${cmd} ${args.join(" ")}`);
       await passthru(cmd, args);
     }

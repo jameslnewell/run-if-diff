@@ -19,8 +19,8 @@ describe("api", () => {
 
     test("returns a map when files have changed", async () => {
       await createRepositoryWithDiff();
-      const { files } = await diff({ cwd: getDirectory() });
-      expect(files).toEqual({
+      const { statuses } = await diff({ cwd: getDirectory() });
+      expect(statuses).toEqual({
         "README.md": "A",
         "package.json": "M",
         "src/index.js": "M",
@@ -30,11 +30,11 @@ describe("api", () => {
 
     test("returns a map of files when files have changed and a status filter is provided", async () => {
       await createRepositoryWithDiff();
-      const { files } = await diff({
+      const { statuses } = await diff({
         cwd: getDirectory(),
         statuses: ["A", "m"],
       });
-      expect(files).toEqual({
+      expect(statuses).toEqual({
         "README.md": "A",
         "src/index.test.js": "D",
       });
@@ -42,11 +42,11 @@ describe("api", () => {
 
     test("returns a map of files when files have changed and a path filter is provided", async () => {
       await createRepositoryWithDiff();
-      const { files } = await diff({
+      const { statuses } = await diff({
         cwd: getDirectory(),
         paths: ["*.js"],
       });
-      expect(files).toEqual({
+      expect(statuses).toEqual({
         "src/index.js": "M",
         "src/index.test.js": "D",
       });

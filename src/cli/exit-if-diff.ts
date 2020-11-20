@@ -34,8 +34,8 @@ import * as debug from "./utils/debug";
   };
 
   try {
-    const { files } = await diff(getAPIOptionsFromCLIOptions(argv));
-    if (Object.keys(files).length) {
+    const { count } = await diff(getAPIOptionsFromCLIOptions(argv));
+    if (count > 0) {
       debug.log(`exiting with 128`);
       process.exitCode = argv["exit-code-when-changed"];
     } else {

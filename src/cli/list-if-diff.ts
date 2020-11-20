@@ -18,13 +18,13 @@ import * as debug from "./utils/debug";
     .argv as unknown) as CLIOptions;
 
   try {
-    const { files } = await diff(getAPIOptionsFromCLIOptions(argv));
-    Object.keys(files).forEach((file) => console.log(file));
+    const { paths } = await diff(getAPIOptionsFromCLIOptions(argv));
+    paths.forEach((path) => console.log(path));
     debug.log(`exiting with 0`);
     process.exitCode = 0;
   } catch (error) {
     debug.log(`exiting with 1`);
     console.error(error);
     process.exitCode = 1;
-  }
+  } 
 })();

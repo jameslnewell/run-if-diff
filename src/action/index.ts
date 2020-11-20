@@ -15,7 +15,7 @@ import { diff } from "../api";
       .split("\n")
       .filter((p) => !!p);
 
-    const { ref, files } = await diff({
+    const { ref, count, paths, statuses } = await diff({
       cwd,
       since,
       paths: filePaths,
@@ -23,15 +23,15 @@ import { diff } from "../api";
     });
 
     console.log(`ref: ${ref}`);
-    console.log(`count: ${Object.keys(files).length}`);
+    console.log(`count: ${count}`);
     console.log("files:");
-    Object.entries(files).forEach(([path, status]) => {
-      console.log(` - ${status}\t${path}`);
+    Object.entries(statuses).forEach(([path, status]) => {
+      console.log(` - ${status} ${path}`);
     });
 
     core.setOutput("ref", ref);
-    core.setOutput("count", Object.keys(files).length);
-    core.setOutput("paths", Object.keys(files).join("\n"));
+    core.setOutput("count", count);
+    core.setOutput("paths", paths.join("\n"));
   } catch (error) {
     core.setFailed(error && error.message);
   }
