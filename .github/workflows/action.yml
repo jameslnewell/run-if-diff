@@ -33,5 +33,5 @@ jobs:
       - run: |
           git config --global user.name 'James Newell'
           git config --global user.email 'jameslnewell@users.noreply.github.com'
-          git tag -f previous
-          git push --tags
+          git tag --force previous
+          git push --tags --force
